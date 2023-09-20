@@ -1,0 +1,888 @@
+fileFormatVersion: 2
+guid: 319b7f483e8afbd42acfa31f5a873ba9
+timeCreated: 1445961482
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Box001
+    100002: Box002
+    100004: Box003
+    100006: Box004
+    100008: Box011
+    100010: brake_flap
+    100012: Cylinder001
+    100014: Cylinder004
+    100016: Cylinder005
+    100018: Cylinder011
+    100020: Cylinder014
+    100022: Cylinder015
+    100024: Cylinder016
+    100026: Cylinder017
+    100028: Cylinder018
+    100030: Cylinder019
+    100032: Cylinder020
+    100034: Cylinder021
+    100036: Cylinder022
+    100038: Cylinder023
+    100040: Cylinder024
+    100042: Cylinder025
+    100044: Cylinder026
+    100046: Cylinder027
+    100048: Engine_afterburner_left_01
+    100050: Engine_afterburner_left_02
+    100052: engine_flame_left
+    100054: engine_flame_right
+    100056: exhaust_right_003
+    100058: exhaust_right_004
+    100060: exhaust_right_1
+    100062: exhaust_right_2
+    100064: Front_tyre_door_left
+    100066: Front_tyre_door_right
+    100068: front_window_frame
+    100070: helmet
+    100072: Lights_rear_tail
+    100074: main_window_frame
+    100076: Object005
+    100078: Object011
+    100080: Object012
+    100082: Object013
+    100084: Object014
+    100086: Object016
+    100088: Object017
+    100090: Object018
+    100092: OilTank004
+    100094: pilot
+    100096: rear_left_tail
+    100098: rear_left_wing
+    100100: rear_right_tail
+    100102: rear_right_wing
+    100104: Reverse_stabliser_left
+    100106: Reverse_stabliser_right
+    100108: rudder_flap_left
+    100110: rudder_flap_right
+    100112: Shape002
+    100114: Shape003
+    100116: Shape004
+    100118: Sphere004
+    100120: //RootNode
+    100122: visor
+    100124: wing_left_flap
+    100126: wing_left_flap_front
+    100128: Wing_main_left
+    100130: wing_right_flap
+    100132: wing_right_flap_Front
+    400000: Box001
+    400002: Box002
+    400004: Box003
+    400006: Box004
+    400008: Box011
+    400010: brake_flap
+    400012: Cylinder001
+    400014: Cylinder004
+    400016: Cylinder005
+    400018: Cylinder011
+    400020: Cylinder014
+    400022: Cylinder015
+    400024: Cylinder016
+    400026: Cylinder017
+    400028: Cylinder018
+    400030: Cylinder019
+    400032: Cylinder020
+    400034: Cylinder021
+    400036: Cylinder022
+    400038: Cylinder023
+    400040: Cylinder024
+    400042: Cylinder025
+    400044: Cylinder026
+    400046: Cylinder027
+    400048: Engine_afterburner_left_01
+    400050: Engine_afterburner_left_02
+    400052: engine_flame_left
+    400054: engine_flame_right
+    400056: exhaust_right_003
+    400058: exhaust_right_004
+    400060: exhaust_right_1
+    400062: exhaust_right_2
+    400064: Front_tyre_door_left
+    400066: Front_tyre_door_right
+    400068: front_window_frame
+    400070: helmet
+    400072: Lights_rear_tail
+    400074: main_window_frame
+    400076: Object005
+    400078: Object011
+    400080: Object012
+    400082: Object013
+    400084: Object014
+    400086: Object016
+    400088: Object017
+    400090: Object018
+    400092: OilTank004
+    400094: pilot
+    400096: rear_left_tail
+    400098: rear_left_wing
+    400100: rear_right_tail
+    400102: rear_right_wing
+    400104: Reverse_stabliser_left
+    400106: Reverse_stabliser_right
+    400108: rudder_flap_left
+    400110: rudder_flap_right
+    400112: Shape002
+    400114: Shape003
+    400116: Shape004
+    400118: Sphere004
+    400120: //RootNode
+    400122: visor
+    400124: wing_left_flap
+    400126: wing_left_flap_front
+    400128: Wing_main_left
+    400130: wing_right_flap
+    400132: wing_right_flap_Front
+    2300000: Box001
+    2300002: Box002
+    2300004: Box003
+    2300006: Box004
+    2300008: Box011
+    2300010: brake_flap
+    2300012: Cylinder001
+    2300014: Cylinder004
+    2300016: Cylinder005
+    2300018: Cylinder011
+    2300020: Cylinder014
+    2300022: Cylinder015
+    2300024: Cylinder016
+    2300026: Cylinder017
+    2300028: Cylinder018
+    2300030: Cylinder019
+    2300032: Cylinder020
+    2300034: Cylinder021
+    2300036: Cylinder022
+    2300038: Cylinder023
+    2300040: Cylinder024
+    2300042: Cylinder025
+    2300044: Cylinder026
+    2300046: Cylinder027
+    2300048: Engine_afterburner_left_02
+    2300050: engine_flame_left
+    2300052: engine_flame_right
+    2300054: exhaust_right_1
+    2300056: exhaust_right_2
+    2300058: Front_tyre_door_left
+    2300060: Front_tyre_door_right
+    2300062: front_window_frame
+    2300064: helmet
+    2300066: Lights_rear_tail
+    2300068: main_window_frame
+    2300070: Object005
+    2300072: Object011
+    2300074: Object012
+    2300076: Object013
+    2300078: Object014
+    2300080: Object016
+    2300082: Object017
+    2300084: Object018
+    2300086: OilTank004
+    2300088: pilot
+    2300090: rear_left_tail
+    2300092: rear_left_wing
+    2300094: rear_right_tail
+    2300096: rear_right_wing
+    2300098: Reverse_stabliser_left
+    2300100: Reverse_stabliser_right
+    2300102: rudder_flap_left
+    2300104: rudder_flap_right
+    2300106: Shape002
+    2300108: Shape003
+    2300110: Shape004
+    2300112: Sphere004
+    2300114: visor
+    2300116: wing_left_flap
+    2300118: wing_left_flap_front
+    2300120: Wing_main_left
+    2300122: wing_right_flap
+    2300124: wing_right_flap_Front
+    2300126: Engine_afterburner_left_01
+    2300128: exhaust_right_003
+    2300130: exhaust_right_004
+    3300000: Box001
+    3300002: Box002
+    3300004: Box003
+    3300006: Box004
+    3300008: Box011
+    3300010: brake_flap
+    3300012: Cylinder001
+    3300014: Cylinder004
+    3300016: Cylinder005
+    3300018: Cylinder011
+    3300020: Cylinder014
+    3300022: Cylinder015
+    3300024: Cylinder016
+    3300026: Cylinder017
+    3300028: Cylinder018
+    3300030: Cylinder019
+    3300032: Cylinder020
+    3300034: Cylinder021
+    3300036: Cylinder022
+    3300038: Cylinder023
+    3300040: Cylinder024
+    3300042: Cylinder025
+    3300044: Cylinder026
+    3300046: Cylinder027
+    3300048: Engine_afterburner_left_02
+    3300050: engine_flame_left
+    3300052: engine_flame_right
+    3300054: exhaust_right_1
+    3300056: exhaust_right_2
+    3300058: Front_tyre_door_left
+    3300060: Front_tyre_door_right
+    3300062: front_window_frame
+    3300064: helmet
+    3300066: Lights_rear_tail
+    3300068: main_window_frame
+    3300070: Object005
+    3300072: Object011
+    3300074: Object012
+    3300076: Object013
+    3300078: Object014
+    3300080: Object016
+    3300082: Object017
+    3300084: Object018
+    3300086: OilTank004
+    3300088: pilot
+    3300090: rear_left_tail
+    3300092: rear_left_wing
+    3300094: rear_right_tail
+    3300096: rear_right_wing
+    3300098: Reverse_stabliser_left
+    3300100: Reverse_stabliser_right
+    3300102: rudder_flap_left
+    3300104: rudder_flap_right
+    3300106: Shape002
+    3300108: Shape003
+    3300110: Shape004
+    3300112: Sphere004
+    3300114: visor
+    3300116: wing_left_flap
+    3300118: wing_left_flap_front
+    3300120: Wing_main_left
+    3300122: wing_right_flap
+    3300124: wing_right_flap_Front
+    3300126: Engine_afterburner_left_01
+    3300128: exhaust_right_003
+    3300130: exhaust_right_004
+    4300000: Box001
+    4300002: Cylinder018
+    4300004: Cylinder019
+    4300006: Object011
+    4300008: Object016
+    4300010: rear_left_wing
+    4300012: rear_left_tail
+    4300014: exhaust_right_1
+    4300016: exhaust_right_2
+    4300018: rudder_flap_left
+    4300020: Box002
+    4300022: Cylinder001
+    4300024: Cylinder004
+    4300026: Cylinder005
+    4300028: Cylinder011
+    4300030: OilTank004
+    4300032: Sphere004
+    4300034: Box003
+    4300036: Box004
+    4300038: Cylinder016
+    4300040: Cylinder017
+    4300042: Cylinder014
+    4300044: Cylinder015
+    4300046: pilot
+    4300048: Object012
+    4300050: visor
+    4300052: Object013
+    4300054: Object014
+    4300056: main_window_frame
+    4300058: Object005
+    4300060: wing_left_flap_front
+    4300062: wing_left_flap
+    4300064: rear_right_wing
+    4300066: brake_flap
+    4300068: rudder_flap_right
+    4300070: wing_right_flap_Front
+    4300072: wing_right_flap
+    4300074: Cylinder020
+    4300076: Cylinder022
+    4300078: Cylinder021
+    4300080: Cylinder023
+    4300082: Cylinder026
+    4300084: Cylinder025
+    4300086: Cylinder024
+    4300088: Cylinder027
+    4300090: Front_tyre_door_left
+    4300092: Front_tyre_door_right
+    4300094: front_window_frame
+    4300096: Engine_afterburner_left_02
+    4300098: engine_flame_right
+    4300100: engine_flame_left
+    4300102: Reverse_stabliser_right
+    4300104: rear_right_tail
+    4300106: Wing_main_left
+    4300108: Reverse_stabliser_left
+    4300110: helmet
+    4300112: Lights_rear_tail
+    4300114: Shape002
+    4300116: Shape003
+    4300118: Box011
+    4300120: Shape004
+    4300122: Engine_afterburner_left_01
+    4300124: exhaust_right_003
+    4300126: exhaust_right_004
+    4300128: Object017
+    4300130: Object018
+    7400000: Air_Brake
+    7400002: Landing_Gear
+    7400004: Cockpit_open
+    9500000: //RootNode
+    13700000: Engine_afterburner_left_01
+    13700002: exhaust_right_003
+    13700004: exhaust_right_004
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Air_Brake
+      takeName: Take 001
+      firstFrame: 15
+      lastFrame: 26
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box001
+        weight: 1
+      - path: Box001/Cylinder018
+        weight: 1
+      - path: Box001/Cylinder018/Cylinder019
+        weight: 1
+      - path: Box001/Object011
+        weight: 1
+      - path: Box001/Object016
+        weight: 1
+      - path: Box002
+        weight: 1
+      - path: Box003
+        weight: 1
+      - path: Box004
+        weight: 1
+      - path: Box004/Cylinder016
+        weight: 1
+      - path: Box004/Cylinder016/Cylinder017
+        weight: 1
+      - path: Box011
+        weight: 1
+      - path: brake_flap
+        weight: 1
+      - path: Cylinder001
+        weight: 1
+      - path: Cylinder001/Cylinder004
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005/Cylinder011
+        weight: 1
+      - path: Cylinder014
+        weight: 1
+      - path: Cylinder015
+        weight: 1
+      - path: Cylinder020
+        weight: 1
+      - path: Cylinder020/Cylinder022
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021/Cylinder023
+        weight: 1
+      - path: Cylinder026
+        weight: 1
+      - path: Cylinder026/Cylinder025
+        weight: 1
+      - path: Cylinder026/Cylinder025/Cylinder024
+        weight: 1
+      - path: Cylinder026/Cylinder027
+        weight: 1
+      - path: Engine_afterburner_left_01
+        weight: 1
+      - path: Engine_afterburner_left_02
+        weight: 1
+      - path: engine_flame_left
+        weight: 1
+      - path: engine_flame_right
+        weight: 1
+      - path: exhaust_right_1
+        weight: 1
+      - path: exhaust_right_2
+        weight: 1
+      - path: exhaust_right_003
+        weight: 1
+      - path: exhaust_right_004
+        weight: 1
+      - path: Front_tyre_door_left
+        weight: 1
+      - path: Front_tyre_door_right
+        weight: 1
+      - path: front_window_frame
+        weight: 1
+      - path: helmet
+        weight: 1
+      - path: Lights_rear_tail
+        weight: 1
+      - path: Object012
+        weight: 1
+      - path: Object013
+        weight: 1
+      - path: Object014
+        weight: 1
+      - path: Object014/main_window_frame
+        weight: 1
+      - path: Object014/Object005
+        weight: 1
+      - path: Object017
+        weight: 1
+      - path: Object018
+        weight: 1
+      - path: OilTank004
+        weight: 1
+      - path: pilot
+        weight: 1
+      - path: rear_left_tail
+        weight: 1
+      - path: rear_left_wing
+        weight: 1
+      - path: rear_right_tail
+        weight: 1
+      - path: rear_right_wing
+        weight: 1
+      - path: Reverse_stabliser_left
+        weight: 1
+      - path: Reverse_stabliser_right
+        weight: 1
+      - path: rudder_flap_left
+        weight: 1
+      - path: rudder_flap_right
+        weight: 1
+      - path: Shape002
+        weight: 1
+      - path: Shape003
+        weight: 1
+      - path: Shape004
+        weight: 1
+      - path: Sphere004
+        weight: 1
+      - path: visor
+        weight: 1
+      - path: wing_left_flap
+        weight: 1
+      - path: wing_left_flap_front
+        weight: 1
+      - path: Wing_main_left
+        weight: 1
+      - path: wing_right_flap
+        weight: 1
+      - path: wing_right_flap_Front
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Landing_Gear
+      takeName: Take 001
+      firstFrame: 26
+      lastFrame: 50
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box001
+        weight: 1
+      - path: Box001/Cylinder018
+        weight: 1
+      - path: Box001/Cylinder018/Cylinder019
+        weight: 1
+      - path: Box001/Object011
+        weight: 1
+      - path: Box001/Object016
+        weight: 1
+      - path: Box002
+        weight: 1
+      - path: Box003
+        weight: 1
+      - path: Box004
+        weight: 1
+      - path: Box004/Cylinder016
+        weight: 1
+      - path: Box004/Cylinder016/Cylinder017
+        weight: 1
+      - path: Box011
+        weight: 1
+      - path: brake_flap
+        weight: 1
+      - path: Cylinder001
+        weight: 1
+      - path: Cylinder001/Cylinder004
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005/Cylinder011
+        weight: 1
+      - path: Cylinder014
+        weight: 1
+      - path: Cylinder015
+        weight: 1
+      - path: Cylinder020
+        weight: 1
+      - path: Cylinder020/Cylinder022
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021/Cylinder023
+        weight: 1
+      - path: Cylinder026
+        weight: 1
+      - path: Cylinder026/Cylinder025
+        weight: 1
+      - path: Cylinder026/Cylinder025/Cylinder024
+        weight: 1
+      - path: Cylinder026/Cylinder027
+        weight: 1
+      - path: Engine_afterburner_left_01
+        weight: 1
+      - path: Engine_afterburner_left_02
+        weight: 1
+      - path: engine_flame_left
+        weight: 1
+      - path: engine_flame_right
+        weight: 1
+      - path: exhaust_right_1
+        weight: 1
+      - path: exhaust_right_2
+        weight: 1
+      - path: exhaust_right_003
+        weight: 1
+      - path: exhaust_right_004
+        weight: 1
+      - path: Front_tyre_door_left
+        weight: 1
+      - path: Front_tyre_door_right
+        weight: 1
+      - path: front_window_frame
+        weight: 1
+      - path: helmet
+        weight: 1
+      - path: Lights_rear_tail
+        weight: 1
+      - path: Object012
+        weight: 1
+      - path: Object013
+        weight: 1
+      - path: Object014
+        weight: 1
+      - path: Object014/main_window_frame
+        weight: 1
+      - path: Object014/Object005
+        weight: 1
+      - path: Object017
+        weight: 1
+      - path: Object018
+        weight: 1
+      - path: OilTank004
+        weight: 1
+      - path: pilot
+        weight: 1
+      - path: rear_left_tail
+        weight: 1
+      - path: rear_left_wing
+        weight: 1
+      - path: rear_right_tail
+        weight: 1
+      - path: rear_right_wing
+        weight: 1
+      - path: Reverse_stabliser_left
+        weight: 1
+      - path: Reverse_stabliser_right
+        weight: 1
+      - path: rudder_flap_left
+        weight: 1
+      - path: rudder_flap_right
+        weight: 1
+      - path: Shape002
+        weight: 1
+      - path: Shape003
+        weight: 1
+      - path: Shape004
+        weight: 1
+      - path: Sphere004
+        weight: 1
+      - path: visor
+        weight: 1
+      - path: wing_left_flap
+        weight: 1
+      - path: wing_left_flap_front
+        weight: 1
+      - path: Wing_main_left
+        weight: 1
+      - path: wing_right_flap
+        weight: 1
+      - path: wing_right_flap_Front
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    - serializedVersion: 16
+      name: Cockpit_open
+      takeName: Take 001
+      firstFrame: 50
+      lastFrame: 67
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Box001
+        weight: 1
+      - path: Box001/Cylinder018
+        weight: 1
+      - path: Box001/Cylinder018/Cylinder019
+        weight: 1
+      - path: Box001/Object011
+        weight: 1
+      - path: Box001/Object016
+        weight: 1
+      - path: Box002
+        weight: 1
+      - path: Box003
+        weight: 1
+      - path: Box004
+        weight: 1
+      - path: Box004/Cylinder016
+        weight: 1
+      - path: Box004/Cylinder016/Cylinder017
+        weight: 1
+      - path: Box011
+        weight: 1
+      - path: brake_flap
+        weight: 1
+      - path: Cylinder001
+        weight: 1
+      - path: Cylinder001/Cylinder004
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005
+        weight: 1
+      - path: Cylinder001/Cylinder004/Cylinder005/Cylinder011
+        weight: 1
+      - path: Cylinder014
+        weight: 1
+      - path: Cylinder015
+        weight: 1
+      - path: Cylinder020
+        weight: 1
+      - path: Cylinder020/Cylinder022
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021
+        weight: 1
+      - path: Cylinder020/Cylinder022/Cylinder021/Cylinder023
+        weight: 1
+      - path: Cylinder026
+        weight: 1
+      - path: Cylinder026/Cylinder025
+        weight: 1
+      - path: Cylinder026/Cylinder025/Cylinder024
+        weight: 1
+      - path: Cylinder026/Cylinder027
+        weight: 1
+      - path: Engine_afterburner_left_01
+        weight: 1
+      - path: Engine_afterburner_left_02
+        weight: 1
+      - path: engine_flame_left
+        weight: 1
+      - path: engine_flame_right
+        weight: 1
+      - path: exhaust_right_1
+        weight: 1
+      - path: exhaust_right_2
+        weight: 1
+      - path: exhaust_right_003
+        weight: 1
+      - path: exhaust_right_004
+        weight: 1
+      - path: Front_tyre_door_left
+        weight: 1
+      - path: Front_tyre_door_right
+        weight: 1
+      - path: front_window_frame
+        weight: 1
+      - path: helmet
+        weight: 1
+      - path: Lights_rear_tail
+        weight: 1
+      - path: Object012
+        weight: 1
+      - path: Object013
+        weight: 1
+      - path: Object014
+        weight: 1
+      - path: Object014/main_window_frame
+        weight: 1
+      - path: Object014/Object005
+        weight: 1
+      - path: Object017
+        weight: 1
+      - path: Object018
+        weight: 1
+      - path: OilTank004
+        weight: 1
+      - path: pilot
+        weight: 1
+      - path: rear_left_tail
+        weight: 1
+      - path: rear_left_wing
+        weight: 1
+      - path: rear_right_tail
+        weight: 1
+      - path: rear_right_wing
+        weight: 1
+      - path: Reverse_stabliser_left
+        weight: 1
+      - path: Reverse_stabliser_right
+        weight: 1
+      - path: rudder_flap_left
+        weight: 1
+      - path: rudder_flap_right
+        weight: 1
+      - path: Shape002
+        weight: 1
+      - path: Shape003
+        weight: 1
+      - path: Shape004
+        weight: 1
+      - path: Sphere004
+        weight: 1
+      - path: visor
+        weight: 1
+      - path: wing_left_flap
+        weight: 1
+      - path: wing_left_flap_front
+        weight: 1
+      - path: Wing_main_left
+        weight: 1
+      - path: wing_right_flap
+        weight: 1
+      - path: wing_right_flap_Front
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 0
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 56
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 0
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
