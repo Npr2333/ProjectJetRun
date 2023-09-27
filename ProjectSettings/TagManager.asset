@@ -8,6 +8,9 @@ TagManager:
   - FxTemporaire
   - Target
   - Plane
+  - IndestructableObstacles
+  - DestructableObstacles
+  - Bullets
   layers:
   - Default
   - TransparentFX

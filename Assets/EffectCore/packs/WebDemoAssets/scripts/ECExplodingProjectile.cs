@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Unity.VisualScripting;
 
 /* THIS CODE IS JUST FOR PREVIEW AND TESTING */
 // Feel free to use any code and picking on it, I cannot guaratnee it will fit into your project
@@ -10,6 +11,7 @@ public class ECExplodingProjectile : MonoBehaviour
     public float thrust;
 
     public float pushForce;
+    public int damage;
 
     public Rigidbody thisRigidbody;
 
@@ -74,7 +76,7 @@ public class ECExplodingProjectile : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(thisRigidbody.velocity);
         }
 
-        CheckCollision(previousPosition);
+        //CheckCollision(previousPosition);
 
         previousPosition = transform.position;
     }
@@ -106,9 +108,9 @@ public class ECExplodingProjectile : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag != "FX")
+        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "Plane")
         {   
             Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 direction = collision.transform.position - transform.position;
@@ -116,14 +118,22 @@ public class ECExplodingProjectile : MonoBehaviour
             
             hitRigidbody.AddForce(direction * pushForce, ForceMode.Force);
 
-            ContactPoint contact = collision.contacts[0];
-            Quaternion rot = Quaternion.FromToRotation(Vector3.forward, contact.normal);
-            if (ignorePrevRotation)
+            if (collision.gameObject.tag == "DestructableObstacles")
             {
-                rot = Quaternion.Euler(0, 0, 0);
+                DestructableObstacles obstacle = collision.gameObject.GetComponent<DestructableObstacles>();
+                obstacle.OnHit(damage);
             }
-            Vector3 pos = contact.point;
-            Instantiate(impactPrefab, pos, rot);
+
+            //ContactPoint contact = collision.contacts[0];
+            //Vector3 position = transform.position;
+            //Quaternion rot = Quaternion.FromToRotation(Vector3.forward, position.normal);
+            //if (ignorePrevRotation)
+            //{
+            //    rot = Quaternion.Euler(0, 0, 0);
+            //}
+            //Vector3 pos = contact.point;
+            
+            Instantiate(impactPrefab, transform.position, transform.rotation);
             if (!explodeOnTimer && Missile == false)
             {
                 Destroy(gameObject);

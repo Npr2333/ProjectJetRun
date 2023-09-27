@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
+      propertyPath: m_TagString
+      value: Bullets
+      objectReference: {fileID: 0}
     - target: {fileID: 1540588367011230, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -30,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4836675779974994, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4836675779974994, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       propertyPath: m_LocalPosition.x
@@ -73,6 +77,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 114591203083495332, guid: edc555170136714468e06ae43a7e0c86, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114591203083495332, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       propertyPath: pushForce
       value: 1
       objectReference: {fileID: 0}
@@ -82,29 +90,16 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2588686218279271414}
+      addedObject: {fileID: 8776662795950307290}
     - targetCorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8776662795950307290}
+      addedObject: {fileID: 6650090712498636451}
   m_SourcePrefab: {fileID: 100100000, guid: edc555170136714468e06ae43a7e0c86, type: 3}
 --- !u!1 &2314591060724180985 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
   m_PrefabInstance: {fileID: 2313569237239713149}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2588686218279271414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2314591060724180985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 605c04c19e73cbf499371042b4a86fce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pushForce: 5
 --- !u!136 &8776662795950307290
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -120,11 +115,26 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.05
   m_Height: 0.087681405
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0.74}
+--- !u!114 &6650090712498636451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2314591060724180985}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 605c04c19e73cbf499371042b4a86fce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pushForce: 0
+  damage: 10
+  explode: {fileID: 0}

@@ -17,7 +17,7 @@ public abstract class Obstacles : MonoBehaviour
         
     }
 
-    public abstract void OnHit(Rigidbody player); // When player hits the obstacle
+    public abstract void OnHit(Collision collider); // When player hits the obstacle
 
     protected virtual void DestroyObstacle()
     {

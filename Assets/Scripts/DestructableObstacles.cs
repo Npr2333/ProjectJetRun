@@ -1,23 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using UnityEngine;
 
-public class DestructableObstacles : Obstacles
+public class DestructableObstacles : MonoBehaviour
 {
-    private void Start()
+    public PlaneHealth player;
+    public int Damage = 20;
+    public int health = 100;
+    public ParticleSystem DestructionEffect;
+    private Vector3 ContactPoint;
+
+    void Start()
     {
-        isDestructible = true;
-        health = 1; 
+
+    }
+    public void OnHit(int damageTaken)
+    {
+        // When bullet hits this thing
+            health -= damageTaken;
+            if (health <= 0)
+            {   
+                ParticleSystem explode = Instantiate(DestructionEffect, transform.position, Quaternion.identity);
+                Destroy(gameObject);
+                //Destroy(explode);
+            }
     }
 
-    public override void OnHit(Rigidbody player)
-    {
-        // When player hits this thing
-        health--;
-        if (health <= 0)
+    private void OnCollisionEnter(Collision other) 
+    {   
+        Debug.Log("Entered");
+        if (other.gameObject.tag == "Plane")
         {
-            DestroyObstacle();
+            ContactPoint = other.contacts[0].point;
+            player.ReduceHealth(Damage, ContactPoint);
         }
-        // More functions to be added here
+
+        if(other.gameObject.tag == "Bullets")
+        {
+            Debug.Log("Hit");
+            BulletController bc = other.gameObject.GetComponent<BulletController>();
+            if(bc != null)
+            {
+                OnHit(bc.damage);
+            }
+        }
     }
+
 }
