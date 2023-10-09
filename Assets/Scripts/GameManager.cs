@@ -16,6 +16,14 @@ public class GameManager : MonoBehaviour
     }
 
     public GameState currentState;
+    public GameObject player;
+
+    public static GameManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     public void Start()

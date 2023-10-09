@@ -9,6 +9,7 @@ public class ECExplodingProjectile : MonoBehaviour
     public GameObject impactPrefab;
     public GameObject explosionPrefab;
     public float thrust;
+    public float delay = 3f;
 
     public float pushForce;
     public int damage;
@@ -51,6 +52,7 @@ public class ECExplodingProjectile : MonoBehaviour
              {
                  Explode();
              }*/
+        StartCoroutine(Suicide(delay));
         timer += Time.deltaTime;
         if (timer >= explosionTimer && explodeOnTimer == true)
         {
@@ -149,6 +151,11 @@ public class ECExplodingProjectile : MonoBehaviour
 
             }
         }
+    }
+    IEnumerator Suicide(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 
     void Explode()

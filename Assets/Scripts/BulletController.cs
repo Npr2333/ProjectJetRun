@@ -7,10 +7,11 @@ public class BulletController : MonoBehaviour
     public float pushForce = 10.0f;
     public int damage = 10;
     public ParticleSystem explode;
+    public float delay = 3f;
 
     void Start()
     {
-        
+        StartCoroutine(Suicide(delay));
     }
     //private void OnCollisionEnter(Collision collision)
     //{
@@ -33,6 +34,11 @@ public class BulletController : MonoBehaviour
                 obstacle.OnHit(damage);
             }
 
+    }
+    IEnumerator Suicide(float time)
+    {
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 }
 

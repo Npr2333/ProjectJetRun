@@ -7,7 +7,7 @@ public class PlaneShooting : MonoBehaviour
     public Rigidbody m_Shell;
     public ParticleSystem m_flare;
     public Transform m_FireTransform;
-    public Slider m_AimSlider;
+    //public Slider m_AimSlider;
     public AudioSource m_ShootingAudio;
     public AudioClip m_ChargingClip;
     public AudioClip m_FireClip;
@@ -29,7 +29,7 @@ public class PlaneShooting : MonoBehaviour
     private void OnEnable()
     {
         m_CurrentLaunchForce = m_MinLaunchForce;
-        m_AimSlider.value = m_MinLaunchForce;
+        //m_AimSlider.value = m_MinLaunchForce;
     }
 
     private void Start()
