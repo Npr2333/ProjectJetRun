@@ -118,7 +118,7 @@ public class ECExplodingProjectile : MonoBehaviour
             Vector3 direction = collision.transform.position - transform.position;
             direction.Normalize();
             
-            hitRigidbody.AddForce(direction * pushForce, ForceMode.Force);
+            //hitRigidbody.AddForce(direction * pushForce, ForceMode.Force);
 
             if (collision.gameObject.tag == "DestructableObstacles")
             {

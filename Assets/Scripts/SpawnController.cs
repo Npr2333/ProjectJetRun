@@ -72,8 +72,13 @@ public class SpawnController : MonoBehaviour
     void SpawnObstacle(int type, int position, int layer)
     {
         GameObject prefab = (type == 0) ? destructibleObstaclePrefab : indestructibleObstaclePrefab;
-        GameObject Obstacle = Instantiate(prefab, spawnPoints[layer][position].transform.position, Quaternion.identity);
+        GameObject Obstacle = Instantiate(prefab, spawnPoints[layer][position].transform.position, Quaternion.Euler(0,180,0));
         Rigidbody rb = Obstacle.GetComponent<Rigidbody>();
+        BirdyCopterController heli = Obstacle.GetComponent<BirdyCopterController>();
+        if(heli)
+        {
+            heli.setTarget(player);
+        }
         rb.AddForce(new Vector3(0, 0, launchForce), ForceMode.Force);
         //if (type == 0)
         //{

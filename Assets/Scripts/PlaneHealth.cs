@@ -19,6 +19,16 @@ public class PlaneHealth : MonoBehaviour
         }
     }
 
+    public void OnHit(int damage)
+    {
+        health -= damage;
+        if(health <= 0)
+        {
+            Death();
+            Destroy(gameObject);
+        }
+    }
+
     public void IncreaseHealth(int amount)
     {
         //Handle player takes heal

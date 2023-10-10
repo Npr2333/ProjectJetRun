@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2355764934221266942}
   - component: {fileID: 2671922685973514601}
   - component: {fileID: 8996634562212923933}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Indestructable Obstacle
   m_TagString: IndestructableObstacles
   m_Icon: {fileID: 0}
@@ -123,6 +123,7 @@ MonoBehaviour:
   isDestructible: 0
   player: {fileID: 0}
   Damage: 100
+  destoryTime: 10
 --- !u!54 &8996634562212923933
 Rigidbody:
   m_ObjectHideFlags: 0
