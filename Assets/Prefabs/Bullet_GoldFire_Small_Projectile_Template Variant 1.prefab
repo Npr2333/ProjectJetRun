@@ -144,16 +144,14 @@ PrefabInstance:
       propertyPath: InitialModule.startColor.minColor.r
       value: 0.22659922
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114591203083495332, guid: edc555170136714468e06ae43a7e0c86, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8776662795950307290}
-    - targetCorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6650090712498636451}
     - targetCorrespondingSourceObject: {fileID: 1238843893459588, guid: edc555170136714468e06ae43a7e0c86, type: 3}
       insertIndex: -1
       addedObject: {fileID: 214856847800226511}
@@ -186,22 +184,6 @@ CapsuleCollider:
   m_Height: 0.087681405
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0.74}
---- !u!114 &6650090712498636451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2314591060724180985}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 605c04c19e73cbf499371042b4a86fce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pushForce: 0
-  damage: 0
-  explode: {fileID: 0}
-  delay: 3
 --- !u!114 &214856847800226511
 MonoBehaviour:
   m_ObjectHideFlags: 0

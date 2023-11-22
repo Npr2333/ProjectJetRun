@@ -71,7 +71,7 @@ public class EnemyProjectile : MonoBehaviour
             thisRigidbody.AddForce(transform.forward * projectileSpeed);
         }
 
-        if (LookRotation && timer >= 0.05f)
+        if (LookRotation && timer >= 0.05f && thisRigidbody.velocity != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(thisRigidbody.velocity);
         }
@@ -110,7 +110,7 @@ public class EnemyProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles" )
+        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles" && collision.gameObject.tag != "Boss" )
         {
             Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 direction = collision.transform.position - transform.position;

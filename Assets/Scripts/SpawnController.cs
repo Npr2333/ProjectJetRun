@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Accessibility;
 
 public class SpawnController : MonoBehaviour
 {   
     public AudioSource Speaker;
     //public AudioClip music;
-    public float launchForce = 10f;
+    public CentralPackMovement central;
+    public GameObject centralBulletPack;
+    public float launchSpeed = 10f;
+    public float stageEndwaitSeconds = 0f;
     public GameObject spawnPoint11;
     public GameObject spawnPoint12;
     public GameObject spawnPoint13;
@@ -23,16 +27,22 @@ public class SpawnController : MonoBehaviour
     public GameObject destructibleObstaclePrefab;
     public GameObject indestructibleObstaclePrefab;
     public GameObject player;
+    public bool isPlaceHolder = false;
+    public GameObject Central;
+    private CentralPackMovement centralMovement;
     private List<List<GameObject>> spawnPoints;
     private  List<List<double>> notes = StageOneNotes.notes;
     private float startTime;
+    private GameManager gameManager;
+    private float centralSpeed;
 
     void Start()
-    {
-        // Initialize noteDataList from GeneratedCode.cs
-        // You may need to adjust this line to correctly access the NoteData array from GeneratedCode.cs
-        // Record the start time (you can also call this in another method when your specific event happens)
-        startTime = Time.time;
+    {   
+        if (isPlaceHolder)
+        {
+            notes = StageOneNotes.placeHolder;
+        }
+        gameManager = FindObjectOfType<GameManager>();
         List<GameObject>spawnPoints1 = new List<GameObject>
         {
             spawnPoint11,spawnPoint12,spawnPoint13,spawnPoint14
@@ -51,10 +61,15 @@ public class SpawnController : MonoBehaviour
         spawnPoints.Add(spawnPoints2);
         spawnPoints.Add(spawnPoints3);
 
-            
-        // Start the spawn coroutine
-        Speaker.Play();
-        StartCoroutine(SpawnObstaclesCoroutine());
+        centralMovement = Central.GetComponent<CentralPackMovement>();
+    }
+
+    private void Update()
+    {
+        if (central)
+        {
+            centralSpeed = central.getSpeed();
+        }
     }
 
     IEnumerator SpawnObstaclesCoroutine()
@@ -64,22 +79,34 @@ public class SpawnController : MonoBehaviour
             double targetTime = startTime + note[0];
             double waitTime = targetTime - Time.time;
             if (waitTime > 0)
-                yield return new WaitForSeconds((float)waitTime); // Wait until the target time
+                yield return new WaitForSeconds((float)waitTime); 
             SpawnObstacle((int)note[3], (int)note[1], (int)note[2]);
         }
+
+        yield return new WaitForSeconds(stageEndwaitSeconds);//Wait for some second before set the new stage
+
+        gameManager.SetCurrentState(GameManager.GameState.Transition1);//Set the stage to transiton1
     }
 
     void SpawnObstacle(int type, int position, int layer)
     {
         GameObject prefab = (type == 0) ? destructibleObstaclePrefab : indestructibleObstaclePrefab;
         GameObject Obstacle = Instantiate(prefab, spawnPoints[layer][position].transform.position, Quaternion.Euler(0,180,0));
-        Rigidbody rb = Obstacle.GetComponent<Rigidbody>();
+        Obstacle.transform.parent = central.transform;
+        //Rigidbody rb = Obstacle.GetComponent<Rigidbody>();
         BirdyCopterController heli = Obstacle.GetComponent<BirdyCopterController>();
+        IndustructableObstacles RG = Obstacle.GetComponent<IndustructableObstacles>();
         if(heli)
         {
             heli.setTarget(player);
+            heli.setMovement(transform.forward * launchSpeed);
+            heli.setBulletPack(centralBulletPack);
         }
-        rb.AddForce(new Vector3(0, 0, launchForce), ForceMode.Force);
+        else
+        {
+            RG.setMovement(transform.forward * launchSpeed);
+        }
+        //rb.AddForce(new Vector3(0, 0, launchForce), ForceMode.Force);
         //if (type == 0)
         //{
         //    GameObject Obstacle = Instantiate(destructibleObstaclePrefab, spawnPoints[layer][position].transform.position, Quaternion.identity);
@@ -96,5 +123,17 @@ public class SpawnController : MonoBehaviour
         //    Rigidbody rb = Obstacle.GetComponent<Rigidbody>();
         //    rb.AddForce(new Vector3(0, 0, launchForce), ForceMode.Force);
         //}
+    }
+
+    public void setTarget(GameObject target)
+    {
+        player = target;
+    }
+
+    public void startSpawn()
+    {
+        startTime = Time.time;
+        Speaker.Play();
+        StartCoroutine(SpawnObstaclesCoroutine());
     }
 }

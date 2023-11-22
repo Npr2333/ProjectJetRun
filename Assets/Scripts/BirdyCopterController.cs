@@ -6,6 +6,7 @@ using UnityEngine.WSA;
 public class BirdyCopterController : MonoBehaviour
 {
     Animator animate;
+    public GameObject centralbulletPack;
     public GameObject HeliModel;
     public float range = 10f;
     //public float LaunchRange = 5f;
@@ -23,13 +24,17 @@ public class BirdyCopterController : MonoBehaviour
     public AudioClip m_FireClip;
     public float deviationAmount = 0f;
     public float RPM = 600f;
-
+    [HideInInspector]public CharacterController controller;
+    private Vector3 direction;
     // Add fire cooldown variables
     private float m_FireCooldown = 1f;  // 2 shots per second
     private float m_FireCooldownLeft = 0.0f;
+    private Vector3 currentVelocity;
+    private Vector3 lastPosition;
 
     void Start()
     {
+        controller = GetComponent<CharacterController>();
         animate = HeliModel.GetComponent<Animator>();
         animate.SetBool("IsFlying", true);
     }
@@ -42,6 +47,17 @@ public class BirdyCopterController : MonoBehaviour
             LookAtPlayer();
         }
         //Debug.Log(cannon.transform.rotation.eulerAngles);
+
+        currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
+        lastPosition = transform.position;
+    }
+
+    private void FixedUpdate()
+    {
+        if (direction != null)
+        {
+            transform.position += direction * Time.deltaTime;
+        }
     }
 
     public void LookAtPlayer()
@@ -51,7 +67,7 @@ public class BirdyCopterController : MonoBehaviour
         Quaternion Rotation = Quaternion.LookRotation(new Vector3(directionToTarget.x, directionToTarget.y, directionToTarget.z));
         Vector3 parentRotation = parent.transform.rotation.eulerAngles;
         Vector3 rotation = (Rotation * Quaternion.Inverse(Quaternion.Euler(0, parentRotation.y, parentRotation.z))).eulerAngles;
-        Debug.Log(rotation);
+//        Debug.Log(rotation);
         float x = (rotation.x > 180) ? rotation.x - 360 : rotation.x;
         float y = (rotation.y > 180) ? rotation.y - 360 : rotation.y;
         float z = (rotation.z > 180) ? rotation.z - 360 : rotation.z;
@@ -86,13 +102,14 @@ public class BirdyCopterController : MonoBehaviour
         // Instantiate and launch the bullet.
 
         Rigidbody shell = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
-
+        shell.transform.parent = centralbulletPack.transform;
         ParticleSystem flare = Instantiate(m_flare, m_FireTransform.position, m_FireTransform.rotation) as ParticleSystem;
-
+        flare.transform.parent = transform;
         flare.Play();
         Vector3 deviation = new Vector3(Random.Range(-deviationAmount,deviationAmount), Random.Range(-deviationAmount,deviationAmount), Random.Range(-deviationAmount, deviationAmount));
-        shell.velocity = launchForce * m_FireTransform.forward + deviation;
-        Debug.Log(shell.velocity);
+        //shell.velocity = currentVelocity + launchForce * m_FireTransform.forward + deviation;
+        shell.AddForce(launchForce * m_FireTransform.forward + deviation, ForceMode.VelocityChange);
+        //Debug.Log(shell.velocity);
 
         m_ShootingAudio.clip = m_FireClip;
         m_ShootingAudio.Play();
@@ -101,5 +118,15 @@ public class BirdyCopterController : MonoBehaviour
     public void setTarget(GameObject target)
     {
         this.target = target.transform;
+    }
+
+    public void setMovement(Vector3 heading)
+    {
+        direction = heading;
+    }
+
+    public void setBulletPack(GameObject pack)
+    {
+        centralbulletPack = pack;
     }
 }

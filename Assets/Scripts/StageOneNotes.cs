@@ -486,4 +486,10 @@ public static class StageOneNotes
                 new List<double> {448.4597393702804, 1, 0, 1, 0},
                 new List<double> {448.4597393702804, 2, 0, 0, 0},
             };
-}
+    public static List<List<double>> placeHolder = new List<List<double>>
+    {
+                new List<double> {1, 1, 0, 1, 6},
+                new List<double> {2, 2, 0, 0, 7},
+                new List<double> {3, 3, 0, 1, 7},
+    };
+    }

@@ -117,13 +117,18 @@ public class ECExplodingProjectile : MonoBehaviour
             Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 direction = collision.transform.position - transform.position;
             direction.Normalize();
-            
+
             //hitRigidbody.AddForce(direction * pushForce, ForceMode.Force);
 
             if (collision.gameObject.tag == "DestructableObstacles")
             {
                 DestructableObstacles obstacle = collision.gameObject.GetComponent<DestructableObstacles>();
                 obstacle.OnHit(damage);
+            }
+            else if(collision.gameObject.tag == "Boss")
+            {
+                BossController boss = collision.gameObject.GetComponent<BossController>();
+                boss.OnHit(damage);
             }
 
             //ContactPoint contact = collision.contacts[0];

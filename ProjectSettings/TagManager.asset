@@ -11,6 +11,8 @@ TagManager:
   - IndestructableObstacles
   - DestructableObstacles
   - Bullets
+  - Boss
+  - Untrackable
   layers:
   - Default
   - TransparentFX
@@ -20,7 +22,7 @@ TagManager:
   - UI
   - Plane
   - Obstacles
-  - 
+  - Boss
   - 
   - 
   - 
