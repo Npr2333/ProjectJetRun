@@ -1,11 +1,11 @@
-using Cinemachine;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlaneHealth : MonoBehaviour
 {
-    public int health = 100;
+    public HitSpeaker hitSpeaker;
+    public int setHealth = 100;
+    public int health;
     public ParticleSystem ExplosionEffect;
     private Vector3 ContactPoint;
     public CameraShake cameraInstance;
@@ -16,25 +16,22 @@ public class PlaneHealth : MonoBehaviour
         //Handle player takes damage
         ContactPoint = ContactPosition;
         health -= damage;
+        hitSpeaker.Play();
         if (cameraInstance)
         {
             cameraInstance.ShakeCamera(shakeIntensity, shakeTime);
         }
     }
 
-    public void OnHit(int damage)
-    {
-        health -= damage;
-        if(health <= 0)
-        {
-            Death();
-            Destroy(gameObject);
-        }
-        if (cameraInstance)
-        {
-            cameraInstance.ShakeCamera(shakeIntensity, shakeTime);
-        }
-    }
+    //public void OnHit(int damage)
+    //{
+    //    health -= damage;
+    //    hitSpeaker.Play();
+    //    if (cameraInstance)
+    //    {
+    //        cameraInstance.ShakeCamera(shakeIntensity, shakeTime);
+    //    }
+    //}
 
     public void IncreaseHealth(int amount)
     {
@@ -52,25 +49,48 @@ public class PlaneHealth : MonoBehaviour
     {
         //Handle player Death
         Debug.Log("Player is dead");
-        Explode();
+        StartCoroutine(Explode());
         FindObjectOfType<GameManager>().SetCurrentState(GameManager.GameState.GameOver);
     }
 
-    private void Explode()
+    IEnumerator Explode()
     {
-        //Handle the particle system of plane explosion
         ParticleSystem explosion = Instantiate(ExplosionEffect, ContactPoint, Quaternion.identity);
         explosion.Play();
-        Destroy(explosion,1f);
-        
+        yield return new WaitForSeconds(explosion.main.duration);
+        gameObject.SetActive(false);
+        //Destroy(explosion);
     }
+
+    //private void Explode()
+    //{
+    //    //Handle the particle system of plane explosion
+    //    ParticleSystem explosion = Instantiate(ExplosionEffect, ContactPoint, Quaternion.identity);
+    //    explosion.Play();
+    //    Destroy(explosion,1f);
+        
+    //}
 
     private void Update()
     {
         if (health <= 0)
         {
             Death();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
+    }
+
+    private void Start()
+    {
+        health = setHealth;
+    }
+    public int getHealth()
+    {
+        return (int)Mathf.Ceil(100 * (float)health / setHealth);
+    }
+
+    public void resetHealth()
+    {
+        health = setHealth;
     }
 }

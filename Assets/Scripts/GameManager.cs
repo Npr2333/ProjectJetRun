@@ -1,21 +1,21 @@
 using Cinemachine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class GameManager : MonoBehaviour
 {   
     public enum GameState
     {
         GameStart,
+        Opening,
         Stage1,
         Transition1,
         Stage2,
         Transition2,
         Stage3,
+        Transition3,
+        ScoreCount,
         GameOver,
         Dummy,
     }
@@ -24,11 +24,14 @@ public class GameManager : MonoBehaviour
 
     //State Classes
     private GameStateObject gameStart;
+    private GameStateObject opening;
     private GameStateObject stage1;
     private GameStateObject stage2;
     private GameStateObject stage3;
     private GameStateObject transition1;
     private GameStateObject transition2;
+    private GameStateObject transition3;
+    private GameStateObject scoreCount;
     private GameStateObject gameOver;
     //Gameobjects
     public GameObject centralPack;
@@ -36,28 +39,53 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public GameObject camera;
     public GameObject spawnController;
-    public GameObject boss;
+    public GameObject bossInstance;
     private GameObject playerInstance;
-    private GameObject bossInstance;
     private GameObject pawnInstance1;
     private GameObject pawnInstance2;
+    //Speakers
+    public AudioFade stage2AudioFade;
     //Cameras
+    public CinemachineVirtualCamera openingCamera;
     public CinemachineVirtualCamera camera1;
     public CinemachineVirtualCamera camera2;
+    public UICamController UIcam;
     //Transforms
     public Transform SpawnPlayerTransform;
     public Transform SpawnBossTransform;
     public Transform Stage2BossTransform;
     public Transform Stage2PlayerTransform;
     public Transform Stage3BossTransform;
+    //Timelines
+    public PlayableDirector openingTimeline;
+    public PlayableDirector stage1Timeline;
+    public PlayableDirector stage2Timeline;
+    public PlayableDirector endGameTimeline;
+    //Score
+    public GameObject mainCanvas;
+    public ScoreQueue scoreQueue;
+    public ShowScore showScore;
     //Controller Scripts
     public static GameManager Instance;
     private PlaneMovement playerMovement;
+    private PlaneShooting playerShooting;
+    private TargetingManager playerMSL;
     public BossAttackController bossAttackController;
     public SplineFollowing splineFollower;
+    public Stage1Director stage1Director;
     public Stage2Director stage2Director;
+    public TeleportManager teleportManager;
+    public GameRestartController gameRestartController;
+    public SpeakerPlay stage2Speaker;
+    public OptimizeController optimizeController;
+    public CentralPackMovement centralPackMovement;
+    public EnvironmentController environmentController;
     //State Parameters
     private bool spawnedBoss = false;
+    //State Indicators
+    private bool gameStarted = false;
+    //Boss Parameter
+    public float escapeMultiplier = -2f;
 
 
     public abstract class GameStateObject
@@ -76,17 +104,56 @@ public class GameManager : MonoBehaviour
     {
         public GameStartStage(GameManager manager) : base(manager) { }
         public override void OnStateEnter()
-        {   
-            //The code here is just to get the game running, will set this to engage with UI after the UI system is up.
-            gameManager.SetCurrentState(GameState.Stage1);
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            gameManager.UIcam.setDepth(0);
+            UIManager.Instance.PushPanel(UIPanelType.StartMenu);
+            gameManager.environmentController.returnToOriginal();
         }
         public override void OnStateUpdate()
         {
-            return;
+            if (!gameManager.gameStarted)
+            {
+                return;
+            }
+            else
+            {
+                gameManager.SetCurrentState(GameState.Opening);
+            }
         }
         public override void OnStateExit()
         {
-            return;
+            //gameManager.SetCurrentState(GameState.Stage1);
+            gameManager.gameStarted = false;
+            gameManager.UIcam.setDepth(-2);
+            UIManager.Instance.PopPanel();
+            UIManager.Instance.PushPanel(UIPanelType.MainHud);
+        }
+    }
+
+    public class OpeningStage : GameStateObject
+    {
+        public OpeningStage(GameManager manager) : base(manager) { }
+        public override void OnStateEnter()
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            gameManager.camera.GetComponent<AudioListener>().enabled = false;
+            gameManager.openingCamera.GetComponent<AudioListener>().enabled = true;
+            gameManager.openingCamera.Priority = 10;
+            gameManager.openingTimeline.Play();
+        }
+        public override void OnStateUpdate()
+        {
+
+        }
+        public override void OnStateExit()
+        {
+            gameManager.openingTimeline.Stop();
+            gameManager.camera.GetComponent<AudioListener>().enabled = true;
+            gameManager.openingCamera.GetComponent<AudioListener>().enabled = false;
+            gameManager.openingCamera.Priority = -100;
         }
     }
 
@@ -98,23 +165,43 @@ public class GameManager : MonoBehaviour
         public override void OnStateEnter()
         {
             Debug.Log("In Stage 1");
-            gameManager.playerInstance = Instantiate(gameManager.player, gameManager.SpawnPlayerTransform.position, gameManager.SpawnPlayerTransform.rotation);
-            gameManager.playerInstance.transform.parent = gameManager.centralPack.transform;
+            //Lock Cursor
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            //Player related
+            //gameManager.playerInstance = Instantiate(gameManager.player, gameManager.SpawnPlayerTransform.position, gameManager.SpawnPlayerTransform.rotation);
+            //gameManager.playerInstance.transform.parent = gameManager.centralPack.transform;
+            //playerTargeting.centralBulletPack = gameManager.centralBulletPack;
+            //playerShooting.centralbulletPack = gameManager.centralBulletPack;
+            //gameManager.splineFollower.setTarget(gameManager.playerInstance.transform);
+            gameManager.playerInstance = gameManager.player;
+            gameManager.playerInstance.transform.localPosition = gameManager.SpawnPlayerTransform.transform.localPosition;
             gameManager.playerMovement = gameManager.playerInstance.GetComponent<PlaneMovement>();
             PlaneShooting playerShooting = gameManager.playerInstance.GetComponent<PlaneShooting>();
+            PlaneHealth playerHealth = gameManager.playerInstance.GetComponent<PlaneHealth>();
+            gameManager.playerShooting = gameManager.playerInstance.GetComponent<PlaneShooting>();
+            gameManager.playerMSL = gameManager.playerInstance.GetComponent<TargetingManager>();
+            playerHealth.cameraInstance = gameManager.camera1.GetComponent<CameraShake>();
             TargetingManager playerTargeting = gameManager.playerInstance.GetComponent<TargetingManager>();
-            playerTargeting.centralBulletPack = gameManager.centralBulletPack;
-            playerShooting.centralbulletPack = gameManager.centralBulletPack;
+            gameManager.playerInstance.SetActive(true);
+            //Stage1 director
+            Stage1Director stage1Director = gameManager.stage1Director;
             SpawnController spawn = gameManager.spawnController.GetComponent<SpawnController>();
-            CameraController cameraController = gameManager.camera.GetComponent<CameraController>();
-            gameManager.splineFollower.setTarget(gameManager.playerInstance.transform);
-            cameraController.setTarget(gameManager.playerInstance);
             spawn.setTarget(gameManager.playerInstance);
-            spawn.startSpawn();
+            //stage1Director.DirectStage1();
+            gameManager.stage1Timeline.Play();
+            //spawn.startSpawn();
+            //Set teleport parameters
+            gameManager.teleportManager.setDissolve(gameManager.playerInstance.transform.Find("Dissolve").gameObject);
+            gameManager.teleportManager.player = gameManager.playerInstance;
+            //Camera related
+            //CameraController cameraController = gameManager.camera.GetComponent<CameraController>();
+            //cameraController.setTarget(gameManager.playerInstance);
             gameManager.camera1.Follow = gameManager.playerInstance.transform;
             gameManager.camera1.LookAt = gameManager.playerInstance.transform;
-           //gameManager.camera2.Follow = gameManager.playerInstance.transform;
-           //gameManager.camera2.LookAt = gameManager.playerInstance.transform;
+            gameManager.mainCanvas.SetActive(true);
+            //gameManager.optimizeController.setOptimize(true);
+            gameManager.centralPackMovement.setMoving(true);
         }
         public override void OnStateUpdate()
         {
@@ -122,9 +209,12 @@ public class GameManager : MonoBehaviour
         }
         public override void OnStateExit()
         {
-            gameManager.spawnController.SetActive(false);
+            SpawnController spawnController = gameManager.spawnController.GetComponent<SpawnController>();
+            spawnController.stopSpawn();
+            gameManager.stage1Timeline.Stop();
+            //gameManager.spawnController.SetActive(false);
         }
-    };
+    }
 
     public class GameStage2 : GameStateObject
     {
@@ -135,17 +225,25 @@ public class GameManager : MonoBehaviour
         public override void OnStateEnter()
         {
             Debug.Log("In Stage 2");
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            gameManager.camera2.Priority = 3;
+            gameManager.playerMovement.setTopDown();
             gameManager.playerMovement.setInputStatus(true);
-            gameManager.bossInstance = Instantiate(gameManager.boss, gameManager.SpawnBossTransform.position, gameManager.SpawnBossTransform.rotation);
-            gameManager.bossInstance.transform.parent = gameManager.centralPack.transform;
-            BossController bossController = gameManager.bossInstance.GetComponent<BossController>();
-            bossController.centralBulletPack = gameManager.centralBulletPack.transform;
-            bossController.setTarget(gameManager.playerInstance);
-            bossController.setState(2);
-            bossController.MoveToPosition(gameManager.Stage2BossTransform.position);
+            //gameManager.bossInstance = Instantiate(gameManager.boss, gameManager.SpawnBossTransform.position, gameManager.SpawnBossTransform.rotation);
+            //gameManager.bossInstance.transform.parent = gameManager.centralPack.transform;
+            gameManager.bossInstance.transform.position = gameManager.SpawnBossTransform.position;
+            gameManager.bossInstance.transform.rotation = gameManager.SpawnBossTransform.rotation;
+            gameManager.bossInstance.SetActive(true);
             gameManager.bossAttackController.setBossInstance(gameManager.bossInstance);
-            gameManager.bossAttackController.setAttack(true);
-            gameManager.stage2Director.DirectStage2();
+            BossController bossController = gameManager.bossInstance.GetComponent<BossController>();
+            //bossController.centralBulletPack = gameManager.centralBulletPack.transform;
+            //bossController.setTarget(gameManager.playerInstance);
+            bossController.setState(1);
+            bossController.MoveToPosition(gameManager.Stage2BossTransform.localPosition);
+            //gameManager.bossAttackController.setAttack(true);
+            //gameManager.stage2Director.DirectStage2();
+            gameManager.mainCanvas.SetActive(false);
         }
         public override void OnStateUpdate()
         {
@@ -166,8 +264,15 @@ public class GameManager : MonoBehaviour
         public override void OnStateEnter()
         {
             Debug.Log("In Stage 3");
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            gameManager.bossInstance.transform.position = gameManager.Stage3BossTransform.position;
             gameManager.bossInstance.SetActive(true);
-            gameManager.stage2Director.DirectStage3();
+            BossController bossController = gameManager.bossInstance.GetComponent<BossController>();
+            bossController.setMultiplier(gameManager.escapeMultiplier);
+            bossController.setState(1);
+
+            //gameManager.stage2Director.DirectStage3();
         }
         public override void OnStateUpdate()
         {
@@ -175,7 +280,8 @@ public class GameManager : MonoBehaviour
         }
         public override void OnStateExit()
         {
-
+            gameManager.stage2Timeline.Stop();
+            gameManager.stage2AudioFade.FadeOut();
         }
     }
 
@@ -189,11 +295,13 @@ public class GameManager : MonoBehaviour
         public override void OnStateEnter()
         {
             Debug.Log("In Transition 1");
-            gameManager.camera2.Priority = 3;
             gameManager.playerMovement.setInputStatus(false);
-            gameManager.playerMovement.setTopDown();
+            gameManager.playerShooting.enabled = false;
+            gameManager.playerMSL.enabled = false;
             gameManager.playerMovement.MoveToPosition(gameManager.Stage2PlayerTransform);
-            gameManager.stage2Director.DirectTransition1();
+            //gameManager.stage2Director.DirectTransition1();
+            gameManager.stage2Timeline.Play();
+            gameManager.bossInstance.transform.position = gameManager.SpawnBossTransform.position;
         }
         public override void OnStateUpdate()
         {
@@ -218,10 +326,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("In Transition 2");
             gameManager.camera2.Priority = 1;
-            gameManager.bossInstance.transform.position = gameManager.Stage3BossTransform.position;
             gameManager.bossInstance.SetActive(false);
             gameManager.playerMovement.setTopDown();
-            gameManager.stage2Director.DirectTransition2();
+            //gameManager.stage2Director.DirectTransition2();
+            gameManager.mainCanvas.SetActive(true);
         }
         public override void OnStateUpdate()
         {
@@ -233,14 +341,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public class GameOver : GameStateObject
+    public class Transition3 : GameStateObject
     {
         //This stage should be called by playerHealth or the boss instance,
         //after player's death or boss taken too much damage.
-        public GameOver(GameManager manager) : base(manager) { }
+        public Transition3(GameManager manager) : base(manager) { }
         public override void OnStateEnter()
         {
-            Debug.Log("GameOver");
+            gameManager.endGameTimeline.Play();
         }
         public override void OnStateUpdate()
         {
@@ -248,7 +356,96 @@ public class GameManager : MonoBehaviour
         }
         public override void OnStateExit()
         {
+            gameManager.endGameTimeline.Stop();
+        }
+    }
 
+    public class ScoreCount : GameStateObject
+    {
+        public ScoreCount(GameManager manager) : base(manager) { }
+        public override void OnStateEnter()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            gameManager.mainCanvas.SetActive(false);
+            //gameManager.showScore.showScore(gameManager.scoreQueue.getScore());
+            gameManager.UIcam.setDepth(0);
+            UIManager.Instance.PushPanel(UIPanelType.ScoreMenu);
+            ShowScore showScore = UIManager.Instance.GetPanel(UIPanelType.ScoreMenu).GetComponent<ShowScore>();
+            showScore.showScore(gameManager.scoreQueue.getScore());
+            gameManager.camera2.Priority = 0;
+            gameManager.stage1Timeline.Stop();
+            gameManager.stage1Timeline.time = 0;
+            gameManager.stage2Timeline.Stop();
+            gameManager.stage2Timeline.time = 0;
+            gameManager.stage2Speaker.Stop();
+            gameManager.endGameTimeline.Stop();
+            gameManager.endGameTimeline.time = 0;
+            gameManager.bossAttackController.resetAttack();
+            gameManager.playerInstance.SetActive(false);
+            gameManager.playerInstance.transform.localPosition = gameManager.SpawnPlayerTransform.localPosition;
+            SpawnController spawnController = gameManager.spawnController.GetComponent<SpawnController>();
+            spawnController.stopSpawn();
+            gameManager.centralPackMovement.setMoving(false);
+        }
+        public override void OnStateUpdate()
+        {
+
+        }
+        public override void OnStateExit()
+        {
+            gameManager.UIcam.setDepth(-2);
+            UIManager.Instance.PopPanel();
+            ShowScore showScore = UIManager.Instance.GetPanel(UIPanelType.ScoreMenu).GetComponent<ShowScore>();
+            showScore.resetScore();
+            //gameManager.showScore.resetScore();
+        }
+    }
+
+    public class GameOver : GameStateObject
+    {
+        //This stage should be called by playerHealth or the boss instance,
+        //after player's death or boss taken too much damage.
+        public GameOver(GameManager manager) : base(manager) { }
+        public override void OnStateEnter()
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            //gameManager.stage1Director.StopDirect();
+            //gameManager.stage2Director.stopDirect();
+            gameManager.mainCanvas.SetActive(false);
+            gameManager.UIcam.setDepth(0);
+            UIManager.Instance.PushPanel(UIPanelType.OverMenu);
+            gameManager.camera2.Priority = 0;
+            gameManager.stage1Timeline.Stop();
+            gameManager.stage1Timeline.time = 0;
+            gameManager.stage2Timeline.Stop();
+            gameManager.stage2Timeline.time = 0;
+            gameManager.stage2Speaker.Stop();
+            gameManager.bossAttackController.resetAttack();
+            gameManager.playerInstance.SetActive(false);
+            gameManager.playerInstance.transform.localPosition = gameManager.SpawnPlayerTransform.localPosition;
+            SpawnController spawnController = gameManager.spawnController.GetComponent<SpawnController>();
+            spawnController.stopSpawn(); 
+            gameManager.centralPackMovement.setMoving(false);
+        }
+        public override void OnStateUpdate()
+        {
+            if (!gameManager.gameStarted)
+            {
+                return;
+            }
+            else
+            {
+                gameManager.gameRestartController.restartGame();
+                gameManager.SetCurrentState(GameState.Stage1);
+            }
+        }
+        public override void OnStateExit()
+        {
+            gameManager.gameStarted = false;
+            gameManager.UIcam.setDepth(-2);
+            UIManager.Instance.PopPanel();
         }
     }
 
@@ -262,25 +459,34 @@ public class GameManager : MonoBehaviour
         stateMap = new Dictionary<GameState, GameStateObject>();
         Instance = this;
         gameStart = new GameStartStage(this);
+        opening = new OpeningStage(this);
         stage1 = new GameStage1(this);
         stage2 = new GameStage2(this);
         stage3 = new GameStage3(this);
         transition1 = new Transition1(this);
         transition2 = new Transition2(this);
+        transition3 = new Transition3(this);
+        scoreCount = new ScoreCount(this);
         gameOver = new GameOver(this);
         stateMap.Add(GameState.GameStart, gameStart);
+        stateMap.Add(GameState.Opening, opening);
         stateMap.Add(GameState.Stage1, stage1);
         stateMap.Add(GameState.Stage2, stage2);
         stateMap.Add(GameState.Stage3, stage3);
         stateMap.Add(GameState.Transition1, transition1);
         stateMap.Add(GameState.Transition2, transition2);
+        stateMap.Add(GameState.Transition3, transition3);
+        stateMap.Add(GameState.ScoreCount, scoreCount);
         stateMap.Add(GameState.GameOver, gameOver);
     }
 
     public void SetCurrentState(GameState state)
     {
-        GameStateObject lastStateObject = stateMap[currentState];
-        lastStateObject.OnStateExit();
+        if (state != GameState.GameStart)
+        {
+            GameStateObject lastStateObject = stateMap[currentState];
+            lastStateObject.OnStateExit();
+        }
 
         GameStateObject currentStateObject = stateMap[state];
         currentStateObject.OnStateEnter();
@@ -307,7 +513,12 @@ public class GameManager : MonoBehaviour
             SetCurrentState(currentState);
         }
     }
-}
+
+    public void StartGame()
+    {
+        gameStarted = true;
+    }
+}   
 
    
 

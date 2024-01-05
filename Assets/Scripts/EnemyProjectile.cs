@@ -110,7 +110,7 @@ public class EnemyProjectile : MonoBehaviour
 
     void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles" && collision.gameObject.tag != "Boss" )
+        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles" && collision.gameObject.tag != "Boss" && collision.gameObject.tag != "SplineBoss")
         {
             Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
             Vector3 direction = collision.transform.position - transform.position;
@@ -159,6 +159,11 @@ public class EnemyProjectile : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         Destroy(gameObject);
+    }
+
+    public void setDamage(int number)
+    {
+        damage = number;
     }
 
     void Explode()

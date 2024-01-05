@@ -1,149 +1,122 @@
-using System.Collections;
 using System.Collections.Generic;
-using Tarodev;
-using Unity.PlasticSCM.Editor.WebApi;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
+using System.Linq;
 
 public class TargetingManager : MonoBehaviour
 {
     public Texture2D cursorTexture;
     public Transform missileTransform;
+    public RaderConeTrigger rader;
     public GameObject iconPrefab;
     public Vector2 hotSpot = new Vector2(16, 16);
     public LayerMask obstaclesLayer;
     public LayerMask bossLayer;
+    public int targetsAtATime = 1;
     public float selectionRadius = 1f;
     public float IconLerpTime = 1f;
     public GameObject missile;
     public AudioSource Speaker;
+    public AudioSource launchSpeaker;
     public int missilesAtATime = 1;
+    public float missileCoolDown = 1f;
     public GameObject centralBulletPack;
+    public MslSliderController mslSliderController;
+    private List<GameObject> targetList;
+    private Dictionary<GameObject, bool> currentTargets = new Dictionary<GameObject, bool>();
     private GameObject currentTarget;
-    private GameObject iconInstance;
-    private Vector3 IconInitialPosition;
-    private float currentLerpTime = 0;
-    private bool locked = false;
-
+    private bool fired = false;
+    private float currentTime = 0f;
+    private int currentIndex = 0;
     void Start()
     {
-        //Cursor.SetCursor(cursorTexture, hotSpot, CursorMode.Auto);
+        targetList = new List<GameObject>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        trackTarget();
-        //if (locked)
-        //{
-        //    Speaker.Play();
-        //}
-        //else
-        //{
-        //    Speaker.Stop();
-        //}
+        if (!fired)
+        {
+            trackTarget();
+            currentTime = 0;
+        }else if (fired && currentTime < missileCoolDown)
+        {
+            currentTime += Time.deltaTime;
+        }
+        else
+        {
+            fired = false;
+        }
     }
 
     public void trackTarget()
     {
-        // Continuously check for a target under the mouse cursor
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        // SphereCast with the given radius
-        if (Physics.SphereCast(ray, selectionRadius, out hit, Mathf.Infinity, obstaclesLayer) || Physics.SphereCast(ray, selectionRadius, out hit, Mathf.Infinity, bossLayer))
+        ProcessClosestTargets();
+        //Debug.Log(targetList[0]);
+        if (currentTargets.Any())
         {
-            currentTarget = hit.collider.gameObject;
-            // Lock onto the target
-            if (!locked)
+            List<GameObject> lst = new List<GameObject>();
+            foreach (KeyValuePair<GameObject, bool> entry in currentTargets)
             {
-                locked = true;
-                Speaker.Play();
-                LockOnTarget(currentTarget);
+                currentTarget = entry.Key;
+                if (!entry.Value)
+                {
+                    //currentTargets[entry.Key] = true;
+                    lst.Add(entry.Key);
+                    Speaker.Play();
+                    LockOnTarget();
+                }
             }
-            else
+
+            foreach(GameObject entry in lst)
             {
-                MoveIconWithTarget(currentTarget);
+                currentTargets[entry] = true;
             }
-            //Debug.Log("Locked" + Time.time);
-            //Speaker.Play();
         }
         else
         {
-            Destroy(iconInstance);
             currentTarget = null;
-            locked = false;
             Speaker.Stop();
         }
 
-        
         // Check for mouse click to fire a missile
-        if (Input.GetMouseButtonDown(1) && currentTarget != null)
+        if (Input.GetMouseButtonDown(1) && targetList.Any())
         {
-            FireMissile(currentTarget);
+            manageFire();
+            launchSpeaker.Play();
+            mslSliderController.resetSlider(missileCoolDown);
+            fired = true;
         }
+
+
     }
 
-    public void trackTarget2()
+    private void manageFire()
     {
-        // Convert mouse position to world position
-        Vector3 mousePosition = Input.mousePosition;
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Camera.main.transform.position.y));
-
-        // Find all enemies within the lock-on radius of the mouse
-        Collider[] hitColliders = Physics.OverlapSphere(worldPosition, selectionRadius, obstaclesLayer);
-
-        // Find the closest enemy to the mouse
-        float closestDistance = float.MaxValue;
-        foreach (var hitCollider in hitColliders)
+        if (currentIndex >= targetList.Count)
         {
-            float distance = Vector3.Distance(worldPosition, hitCollider.transform.position);
-            if (distance < closestDistance)
-            {
-                closestDistance = distance;
-                currentTarget = hitCollider.gameObject;
-            }
+            currentIndex = 0;
         }
-
-        // Lock onto the closest enemy
-        if (currentTarget != null)
+        for (int i = 0; i <= currentIndex; i++)
         {
-            LockOnTarget(currentTarget);
-            Speaker.Play();
-            Debug.Log("Locked");
+            FireMissile(targetList[i]);
         }
-
-        // Check for mouse click to fire a missile
-        if (Input.GetAxis("Fire2") > 0.1 && currentTarget != null)
-        {
-            FireMissile(currentTarget);
-        }
+        //FireMissile(targetList[currentIndex]);
+        currentIndex++;  
     }
 
-    public void LockOnTarget(GameObject Target)
+    public void LockOnTarget()
     {
-        iconInstance = Instantiate(iconPrefab);
-        IconInitialPosition = Target.transform.position + new Vector3(0, -1, -1);
-        iconInstance.transform.position = IconInitialPosition;
-        
-
-        currentLerpTime += Time.deltaTime;
-        if (currentLerpTime > IconLerpTime)
+        if (currentTarget.tag == "DestructableObstacles")
         {
-            currentLerpTime = IconLerpTime;
+            BirdyCopterController copter = currentTarget.GetComponent<BirdyCopterController>();
+            copter.isLocked();
         }
-
-        // Calculate the lerp value
-        float perc = currentLerpTime / IconLerpTime;
-
-        // Move the icon
-        iconInstance.transform.position = Vector3.Lerp(IconInitialPosition, Target.transform.position, perc);
-    }
-
-    public void UnlockTarget()
-    {
-
+        else if(currentTarget.tag == "Boss")
+        {
+            BossController bossController = currentTarget.GetComponent<BossController>();
+            bossController.isLocked();
+        }
     }
 
     public void FireMissile(GameObject Target)
@@ -159,9 +132,52 @@ public class TargetingManager : MonoBehaviour
         }
     }
 
-    void MoveIconWithTarget(GameObject target)
+    public void ProcessClosestTargets()
     {
-        iconInstance.transform.position = target.transform.position + new Vector3(0, 0, -1);
+        targetList = rader.GetObjectsInTrigger();
+        targetList.RemoveAll(item => item == null);
+        targetList = targetList.OrderBy(t => (t.transform.position - transform.position).sqrMagnitude)
+            .Take(targetsAtATime)
+            .ToList();
+        //Dictionary<GameObject, bool> temp = new Dictionary<GameObject, bool>();
+        //Debug.Log(targetList);
+        var temp = currentTargets.ToDictionary(entry => entry.Key,
+                                               entry => entry.Value);
+        currentTargets.Clear();
+        foreach (GameObject element in targetList)
+        {
+            if (temp.ContainsKey(element))
+            {
+                currentTargets.Add(element, temp[element]);
+            }
+            else
+            {
+                currentTargets.Add(element, false);
+            }
+        }
+
+        List<GameObject> diffKeys1 = temp.Keys.Except(currentTargets.Keys).ToList();
+
+        // Find keys in dictionary2 that are not in dictionary1
+        List<GameObject> diffKeys2 = currentTargets.Keys.Except(temp.Keys).ToList();
+
+        // Combine the lists if you want all unique keys from both dictionaries
+        List<GameObject> combinedDiffKeys = diffKeys1.Union(diffKeys2).ToList();
+
+        combinedDiffKeys.RemoveAll(item => item == null);
+        foreach (GameObject entry in combinedDiffKeys)
+        {
+            if (entry.tag == "DestructableObstacles")
+            {
+                BirdyCopterController copter = entry.GetComponent<BirdyCopterController>();
+                copter.notLocked();
+            }
+            else if(entry.tag == "Boss")
+            {
+                BossController bossController = entry.GetComponent<BossController>();
+                bossController.notLocked();
+            }
+        }
     }
 
 }

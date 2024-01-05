@@ -13,6 +13,10 @@ TagManager:
   - Bullets
   - Boss
   - Untrackable
+  - ValleyTrack
+  - EnemyMissile
+  - SplineBoss
+  - Boat
   layers:
   - Default
   - TransparentFX
@@ -23,13 +27,13 @@ TagManager:
   - Plane
   - Obstacles
   - Boss
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - ValleyTrack
+  - MagmaRelated
+  - Post Processing
+  - HUD
+  - Triggers
+  - Cave
+  - BoatRelated
   - 
   - 
   - 

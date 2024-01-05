@@ -13,14 +13,19 @@ public class SplineFollowing: MonoBehaviour
     private void Start()
     {
         //transform.position = followTransform.position;
-        offset = transform.position - target.position;
+        if (target)
+        {
+            offset = transform.position - target.position;
+        }
     }
 
     private void Update()
-    {   
-        Vector3 desiredPosition = target.position + offset;
-        transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
-
+    {
+        if (target)
+        {
+            Vector3 desiredPosition = target.position + offset;
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
+        }
         // Quaternion targetRotation = target.rotation;
         // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothTime * Time.deltaTime);
     }

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
-using UnityEditor.ProBuilder;
 using UnityEngine;
 
 public class LaunchRailGun : MonoBehaviour
@@ -16,6 +15,12 @@ public class LaunchRailGun : MonoBehaviour
     public float castTime;
     public Transform detectionTransform;
     public float detectionRate = 1f;
+    public CameraShake cameraShake;
+    public float shakeIntensity = 3f;
+    public float shakeTime = 0.3f;
+    private AudioSource speaker;
+    public AudioClip chargeClip;
+    public AudioClip fireClip;
     private float currentTime;
     private float initialTime;
     private float detectionCooldownLeft = 0f;
@@ -27,6 +32,7 @@ public class LaunchRailGun : MonoBehaviour
         currentTime = Time.deltaTime;
         initialTime = Time.deltaTime;
         detectCylinder.SetActive(false);
+        speaker = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -57,6 +63,8 @@ public class LaunchRailGun : MonoBehaviour
             if(passedTime < castTime && !casted)
             {
                 caster.Play();
+                speaker.clip = chargeClip;
+                speaker.Play();
                 casted = true;
                 passedTime += Time.deltaTime;
                 yield return null;
@@ -71,6 +79,10 @@ public class LaunchRailGun : MonoBehaviour
                 if (caster)
                 {
                     caster.Stop();
+                    speaker.Stop();
+                    speaker.clip = fireClip;
+                    speaker.Play();
+                    cameraShake.ShakeCamera(shakeIntensity, shakeTime);
                 }
                 Destroy(caster);
                 shot.SetActive(true);
@@ -89,6 +101,7 @@ public class LaunchRailGun : MonoBehaviour
                     detectionCooldownLeft = detectionCooldown / detectionRate;  // Start cooldown
                 }
                 passedTime += Time.deltaTime;
+                casted = false;
                 yield return null;
             }
          

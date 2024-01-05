@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class IndustructableObstacles : Obstacles
@@ -10,6 +8,7 @@ public class IndustructableObstacles : Obstacles
     public PlaneHealth player;
     public int Damage = 100;
     public float destoryTime = 10f;
+    public bool noDestroy = false;
     private Vector3 ContactPoint;
     private Vector3 direction;
     private void Start()
@@ -21,11 +20,10 @@ public class IndustructableObstacles : Obstacles
 
         isDestructible = false;
         health = int.MaxValue;
-        StartCoroutine(Suicide(destoryTime));
-    }
-
-    private void Update()
-    {
+        if (!noDestroy)
+        {
+            StartCoroutine(Suicide(destoryTime));
+        }
     }
 
     private void FixedUpdate()

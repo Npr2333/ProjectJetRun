@@ -18,6 +18,8 @@ public class BossController : MonoBehaviour
     }
     //Entites
     public Rigidbody plane;
+    //Animator
+    public Animator animator;
     //Central Packs
     public Transform centralBulletPack;
     //Projectiles
@@ -34,6 +36,7 @@ public class BossController : MonoBehaviour
     //Movements
     private CharacterController _controller;
     public float followSpeed = 5f;
+    public float plannedSpeed = 100f;
     public float acceleration = 10f;
     public float followRange = 1f;
     public float attackRange = 10f;
@@ -45,8 +48,11 @@ public class BossController : MonoBehaviour
     private bool isMoving = false;
     //Parameters
     public float speed = 30f;
+    public int cannonDamage = 50;
     //Attack Movement Multiplier
     public float AttackMovementMultiplier = 2f;
+    //Follow Multiplier
+    public float FollowMovementMultiplier = 1f;
     //Model Rotator
     public GameObject planeRotator;
     public GameObject planeModel;
@@ -62,6 +68,8 @@ public class BossController : MonoBehaviour
     private Vector3 playerPosition;
     //Sonic Boom
     public ParticleSystem sonicBoom;
+    //Death Explosion
+    public ParticleSystem deathBoom;
     //Cannon Shooting
     public Transform FireTransform;
     public float RPM = 600f;
@@ -80,7 +88,11 @@ public class BossController : MonoBehaviour
     //Qualification Variables
     public bool isSplineControlled = false;
     private bool plannedMoving = false;
+    private bool isDead = false;
     public Vector3 plannedPosition;
+    //Canvases
+    public Canvas canvas;
+    public GameObject deathCross;
     void Start()
     {
         currentState = EnemyState.FollowPlayer;
@@ -89,6 +101,10 @@ public class BossController : MonoBehaviour
         LastPosition = transform.position;
         launcher = gameObject.GetComponent<LaunchRailGun>();
         RPM = RPM / 60;
+        if(deathCross)
+        {
+            deathCross.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -145,7 +161,7 @@ public class BossController : MonoBehaviour
     //Implementation for states
     public void FollowPlayer()
     {
-        TrackPlayer(1);
+        TrackPlayer(1, FollowMovementMultiplier);
         LaunchedMissile = false;
         LaunchedBeam = false;
     }
@@ -153,6 +169,10 @@ public class BossController : MonoBehaviour
     public void CannonAttack()
     {
         TrackPlayer(AttackMovementMultiplier);
+        if (!Speaker.isPlaying)
+        {
+            Speaker.Play();
+        }
         if (m_FireCooldownLeft > 0)
         {
             m_FireCooldownLeft -= Time.deltaTime;
@@ -212,18 +232,24 @@ public class BossController : MonoBehaviour
     public void OnHit(int damage)
     {
         health -= damage;
-        if (health <= 0)
+        if (health <= 0 && !isDead)
         {
+            isDead = true;
+            if (deathCross)
+            {
+                deathCross.SetActive(true);
+            }
+            canvas.gameObject.SetActive(false);
             Death();
-            Destroy(gameObject);
+            //gameObject.SetActive(false);
         }
     }
+
+    //Boss Death Related
     private void Death()
     {
         //Handle boss Death
         Debug.Log("Boss is dead");
-        GameManager gm = FindObjectOfType<GameManager>();
-        gm.SetCurrentState(GameManager.GameState.GameOver);
         Explode();
     }
 
@@ -232,14 +258,26 @@ public class BossController : MonoBehaviour
         //Handle the particle system of plane explosion
         ParticleSystem explosion = Instantiate(ExplosionEffect, transform.position, Quaternion.identity);
         explosion.Play();
-        Destroy(explosion, 1f);
+        StartCoroutine(startDeath(3f));
 
     }
 
+    private IEnumerator startDeath(float time)
+    {
+        animator.SetBool("isDead", true);
+        yield return new WaitForSeconds(time);
+        deathBoom.Play();
+        yield return new WaitForSeconds(deathBoom.duration);
+        GameManager gm = FindObjectOfType<GameManager>();
+        if (gm)
+        {
+            gm.SetCurrentState(GameManager.GameState.Transition3);
+        }
+        gameObject.SetActive(false);
+    }
 
-
-    //Implementation for functions
-    private void TrackPlayer(float multiplier)
+    //Boss Attack Related
+    private void TrackPlayer(float multiplier, float followMultiplier = 1f)
     {
         if (isSplineControlled)
         {
@@ -255,7 +293,7 @@ public class BossController : MonoBehaviour
         velocityX = Mathf.Lerp(velocityX, headingX * followSpeed * multiplier, acceleration * multiplier * Time.deltaTime);
         velocityY = Mathf.Lerp(velocityY, headingY * followSpeed * multiplier, acceleration * multiplier * Time.deltaTime);
 
-        Vector3 moveX = transform.right * velocityX * Time.deltaTime;
+        Vector3 moveX = transform.right * velocityX * followMultiplier * Time.deltaTime;
         Vector3 moveY = transform.up * velocityY * Time.deltaTime;
 
         _controller.Move(moveX + moveY);
@@ -264,16 +302,14 @@ public class BossController : MonoBehaviour
     private void CannonFire()
     {
         Rigidbody shell = Instantiate(Bullet, FireTransform.position, FireTransform.rotation) as Rigidbody;
-
+        EnemyProjectile projectile = shell.gameObject.GetComponent<EnemyProjectile>();
+        projectile.setDamage(cannonDamage);
         shell.transform.parent = centralBulletPack.transform;
         ParticleSystem flare = Instantiate(CannonFlare, FireTransform.position, FireTransform.rotation) as ParticleSystem;
         flare.transform.parent = transform;
         flare.Play();
 
         shell.velocity = LaunchForce * FireTransform.forward;
-
-        Speaker.clip = CannonClip;
-        Speaker.Play();
     }
 
     private void LaunchMissile()
@@ -325,20 +361,21 @@ public class BossController : MonoBehaviour
 
     private void toPosition(Vector3 newPosition)
     {
-        Vector3 direction = (newPosition - transform.position).normalized;
+        Vector3 direction = (newPosition - transform.localPosition).normalized;
 
-        Vector3 move = direction * speed * Time.deltaTime;
+        Vector3 move = direction * plannedSpeed * Time.deltaTime;
 
-        Vector3 position = Vector3.MoveTowards(transform.position, newPosition, move.magnitude);
+        Vector3 position = Vector3.MoveTowards(transform.localPosition, newPosition, move.magnitude);
 
         _controller.Move(move);
 
-        if (Vector3.Distance(transform.position, newPosition) <= 0.2f)
+        if (Vector3.Distance(transform.localPosition, newPosition) <= 0.2f)
         {
             plannedMoving = false;
         }
     }
 
+    //Hyper Sonic Related
     public void isHyperSonic(float time)
     {
         startVapor(time);
@@ -351,4 +388,27 @@ public class BossController : MonoBehaviour
         sonicBoom.Stop();
     }
 
+    public void isLocked()
+    {
+        canvas.gameObject.SetActive(true);
+    }
+
+    public void notLocked()
+    {
+        canvas.gameObject.SetActive(false);
+    }
+
+    public void resetStatus()
+    {
+        isDead = false;
+        planeModel.SetActive(true);
+        animator.SetBool("isDead", false);
+        planeModel.transform.localPosition = Vector3.zero;
+        planeModel.transform.localRotation = Quaternion.identity;
+    }
+
+    public void setMultiplier(float multiplier)
+    {
+        FollowMovementMultiplier = multiplier;
+    }
 }

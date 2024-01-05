@@ -23,6 +23,7 @@ public class PlaneMovement : MonoBehaviour
     public float rollDegree = 15f;
     public float pitchDegree = 15f;
     public float rotationSpeed = 30f;
+    public float rotationResetSpeed = 0.5f;
     private Quaternion targetRotation;
     private Rigidbody m_Rigidbody;
     private float currentSpeedX = 0f;
@@ -38,6 +39,8 @@ public class PlaneMovement : MonoBehaviour
     public bool plannedMoving = false;
     public Transform plannedPosition;
     private float centralSpeed = 0f;
+    private Vector3 previousPosition;
+    private Vector3 currentSpeed;
     // Start is called before the first frame update
     void Start()
     {
@@ -67,29 +70,33 @@ public class PlaneMovement : MonoBehaviour
         {
             toPosition(plannedPosition.transform.position);
         }
-
-
-        //if(counter == 2)
-        //{
-        //    Debug.Log("Hi");
-        //}
-        //_controller.Move((transform.forward * centralSpeed * Time.deltaTime));
     }
     private void LateUpdate()
     {
-        if (isMoving && !topDown)
+        if (takeInput)
         {
-            targetRotation = Quaternion.Euler(pitchDegree * -Input.GetAxis(y_axis), 0, rollDegree * -Input.GetAxis(x_axis));
-        }
-        else if(isMoving)
-        {
-            targetRotation = Quaternion.Euler(pitchDegree * Input.GetAxis(y_axis), 0, rollDegree * -Input.GetAxis(x_axis));
+            if (isMoving && !topDown)
+            {
+                targetRotation = Quaternion.Euler(pitchDegree * -Input.GetAxis(y_axis), 0, rollDegree * -Input.GetAxis(x_axis));
+            }
+            else if (isMoving)
+            {
+                targetRotation = Quaternion.Euler(pitchDegree * Input.GetAxis(y_axis), 0, rollDegree * -Input.GetAxis(x_axis));
+            }
+            else
+            {
+                targetRotation = Quaternion.identity;
+            }
+            planeRotator.transform.rotation = Quaternion.Lerp(planeRotator.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
         else
         {
-            targetRotation = Quaternion.identity;
+            float v_x = _controller.velocity.x;
+            float v_y = _controller.velocity.y;
+            targetRotation = Quaternion.Euler(pitchDegree * (-v_y / speed), 0, rollDegree * (-v_x / speed));
+            planeRotator.transform.rotation = Quaternion.Lerp(planeRotator.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
-        planeRotator.transform.rotation = Quaternion.Lerp(planeRotator.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
     }
 
     public void Move()
@@ -134,14 +141,14 @@ public class PlaneMovement : MonoBehaviour
                 return true;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
-            {
-                animate.SetTrigger("DashUp");
-                StartCoroutine(Dash("Up"));
-                return true;
-            }
+            //if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
+            //{
+            //    animate.SetTrigger("DashUp");
+            //    StartCoroutine(Dash("Up"));
+            //    return true;
+            //}
         }
-        else
+        else if(takeInput)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.A))
             {
@@ -158,12 +165,12 @@ public class PlaneMovement : MonoBehaviour
                 return true;
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
-            {
-                animate.SetTrigger("DashUp");
-                StartCoroutine(Dash("Forward"));
-                return true;
-            }
+            //if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
+            //{
+            //    animate.SetTrigger("DashUp");
+            //    StartCoroutine(Dash("Forward"));
+            //    return true;
+            //}
         }
         return false;
 
@@ -226,20 +233,7 @@ public class PlaneMovement : MonoBehaviour
         plannedMoving = true;
 
     }
-
-    //IEnumerator toPosition(Vector3 position)
-    //{
-    //    Vector3 direction = transform.position - position;
-    //    Vector3 normalDirection = direction.normalized;
-    //    while (direction.magnitude >= 0.1)
-    //    {
-    //        direction = transform.position - position;
-    //        normalDirection = direction.normalized;
-    //        Vector3 move = normalDirection * speed * Time.deltaTime;
-    //        _controller.Move(move);
-    //    }
-    //   yield return null;
-    //}
+    
     private void toPosition(Vector3 newPosition)
     {
         Vector3 direction = (newPosition - transform.position).normalized;
@@ -256,6 +250,20 @@ public class PlaneMovement : MonoBehaviour
         if (Vector3.Distance(transform.position, newPosition) < 0.2f)
         {
             plannedMoving = false;
+            StartCoroutine(resetVelocity());
+        }
+    }
+
+    IEnumerator resetVelocity()
+    {
+        Vector3 inital = _controller.velocity;
+        float timer = 0f;
+        while (_controller.velocity != Vector3.zero)
+        {
+            Vector3 move = Vector3.Lerp(inital, Vector3.zero, timer / rotationResetSpeed);
+            timer += Time.deltaTime;
+            _controller.Move(move * Time.deltaTime);
+            yield return null;
         }
     }
 
@@ -267,5 +275,28 @@ public class PlaneMovement : MonoBehaviour
     public void takeSpeedInput(float inputSpeed)
     {
         centralSpeed = inputSpeed;
+    }
+
+    public void resetStatus()
+    {
+        planeRotator.transform.rotation = Quaternion.identity;
+        topDown = false;
+    }
+    private void calculatePlaneSpeed()
+    {
+        if (_controller!= null)
+        {
+            // Calculate the speed as the distance covered since the last frame
+            Vector3 deltaPosition = transform.position - previousPosition;
+            currentSpeed = deltaPosition / Time.deltaTime;
+
+            // Update the previous position for the next frame
+            previousPosition = transform.position;
+        }
+    }
+
+    public Vector3 getPlaneSpeed()
+    {
+        return currentSpeed;
     }
 }

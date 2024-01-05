@@ -49,7 +49,7 @@
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "Scattering.AvoidOverlappingObjects",
-                "value": "{\"m_Value\":false}"
+                "value": "{\"m_Value\":true}"
             },
             {
                 "type": "System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
@@ -104,12 +104,12 @@
             {
                 "type": "System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
                 "key": "ScatteringEditor.PreviewThumSize",
-                "value": "{\"m_Value\":64}"
+                "value": "{\"m_Value\":67}"
             },
             {
                 "type": "UnityEditor.Polybrush.PrefabLoadout, Unity.Polybrush.Editor, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
                 "key": "ScatteringEditor.userLoadout",
-                "value": "{\"m_Value\":{\"infos\":[]}}"
+                "value": "{\"m_Value\":{\"infos\":[{\"palette\":{\"fileID\":11400000,\"guid\":\"5e2fac5319d3c164ab1eebdcd238e86d\",\"type\":2},\"prefab\":{\"fileID\":8361667361864923839,\"guid\":\"8aa57059568368346b6da92ef04b8199\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"5e2fac5319d3c164ab1eebdcd238e86d\",\"type\":2},\"prefab\":{\"fileID\":1932503754665572,\"guid\":\"5f68f9a69b034b44e979af1456058bd7\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"5e2fac5319d3c164ab1eebdcd238e86d\",\"type\":2},\"prefab\":{\"fileID\":7195955519734529794,\"guid\":\"21fdb38994049894c8f9810dde70f5b3\",\"type\":3}},{\"palette\":{\"fileID\":11400000,\"guid\":\"5e2fac5319d3c164ab1eebdcd238e86d\",\"type\":2},\"prefab\":{\"fileID\":1027411723635842,\"guid\":\"6b4f4e6aa8eb15546a97008bd304a860\",\"type\":3}}]}}"
             }
         ]
     }

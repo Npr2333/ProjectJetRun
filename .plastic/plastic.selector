@@ -1,4 +1,0 @@
-repository "Project Jetrun@wechat_os_qy0y_nfnofghe6xjwyysfiqgo@cloud.cn"
-  path "/"
-    br "/main"
-    co "/main"

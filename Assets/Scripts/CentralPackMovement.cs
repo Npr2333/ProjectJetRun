@@ -21,6 +21,10 @@ public class CentralPackMovement : MonoBehaviour
         //}
     }
 
+    public void setMoving(bool status)
+    {
+        isMoving = status;
+    }
     public void setPlane(GameObject planeObject)
     {
         plane = planeObject.GetComponent<PlaneMovement>();
@@ -33,7 +37,11 @@ public class CentralPackMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        if (isMoving)
+        {
+            transform.position += transform.forward * speed * Time.deltaTime;
+        }
+
         if (plane)
         {
             plane.takeSpeedInput(speed);

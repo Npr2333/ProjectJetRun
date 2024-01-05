@@ -1,13 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.WSA;
 
 public class BirdyCopterController : MonoBehaviour
 {
     Animator animate;
     public GameObject centralbulletPack;
     public GameObject HeliModel;
+    public Canvas canvas;
     public float range = 10f;
     //public float LaunchRange = 5f;
     public float RotationSpeed = 180f;
@@ -20,10 +20,13 @@ public class BirdyCopterController : MonoBehaviour
     public ParticleSystem m_flare;
     public float launchForce = 10f;
     public AudioSource m_ShootingAudio;
+    public AudioSource CannonAudio;
     public AudioClip m_ChargingClip;
     public AudioClip m_FireClip;
+    public AudioClip flyingClip;
     public float deviationAmount = 0f;
     public float RPM = 600f;
+    public CopterShaderFade copterShaderFade;
     [HideInInspector]public CharacterController controller;
     private Vector3 direction;
     // Add fire cooldown variables
@@ -31,12 +34,12 @@ public class BirdyCopterController : MonoBehaviour
     private float m_FireCooldownLeft = 0.0f;
     private Vector3 currentVelocity;
     private Vector3 lastPosition;
+    private bool locked = false;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-        animate = HeliModel.GetComponent<Animator>();
-        animate.SetBool("IsFlying", true);
+        copterShaderFade.FadeIn();
     }
 
     // Update is called once per frame
@@ -50,6 +53,7 @@ public class BirdyCopterController : MonoBehaviour
 
         currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
         lastPosition = transform.position;
+        //canvas.gameObject.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -111,13 +115,16 @@ public class BirdyCopterController : MonoBehaviour
         shell.AddForce(launchForce * m_FireTransform.forward + deviation, ForceMode.VelocityChange);
         //Debug.Log(shell.velocity);
 
-        m_ShootingAudio.clip = m_FireClip;
-        m_ShootingAudio.Play();
+        //CannonAudio.clip = m_FireClip;
+        //CannonAudio.Play();
     }
 
     public void setTarget(GameObject target)
     {
-        this.target = target.transform;
+        if (target)
+        {
+            this.target = target.transform;
+        }
     }
 
     public void setMovement(Vector3 heading)
@@ -128,5 +135,15 @@ public class BirdyCopterController : MonoBehaviour
     public void setBulletPack(GameObject pack)
     {
         centralbulletPack = pack;
+    }
+
+    public void isLocked()
+    {
+        canvas.gameObject.SetActive(true);
+    }
+
+    public void notLocked()
+    {
+        canvas.gameObject.SetActive(false);
     }
 }

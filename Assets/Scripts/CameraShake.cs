@@ -16,7 +16,7 @@ public class CameraShake : MonoBehaviour
 
     public void ShakeCamera(float intensity, float time)
     {
-        Debug.Log("Shaking");
+        //Debug.Log("Shaking");
         CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin =
             camera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 

@@ -22,4 +22,9 @@ public class DetectionCylinder : MonoBehaviour
             }
         }
     }
+
+    public void setDamage(int num)
+    {
+        damage = num;
+    } 
 }

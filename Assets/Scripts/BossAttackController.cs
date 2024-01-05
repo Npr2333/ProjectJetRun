@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Splines;
 
@@ -51,14 +52,16 @@ public class BossAttackController : MonoBehaviour
                 return;
             }else if(currentEventIndex < timedEvents.Count && elapsedTime >= timedEvents[currentEventIndex].time && timedEvents[currentEventIndex].enemyIndex == 1)
             {
-                pawnController1.setState((timedEvents[currentEventIndex].stateIndex));
+                //pawnController1.setState((timedEvents[currentEventIndex].stateIndex));
+                pawnInstance1.SetActive(true);
                 pawnAnimate1.Play();
 
                 currentEventIndex++;
                 return;
             }else if(currentEventIndex < timedEvents.Count && elapsedTime >= timedEvents[currentEventIndex].time && timedEvents[currentEventIndex].enemyIndex == 2)
             {
-                pawnController2.setState((timedEvents[currentEventIndex].stateIndex));
+                //pawnController2.setState((timedEvents[currentEventIndex].stateIndex));
+                pawnInstance2.SetActive(true);
                 pawnAnimate2.Play();
 
                 currentEventIndex++;
@@ -73,6 +76,11 @@ public class BossAttackController : MonoBehaviour
         attacking = status;
     }
 
+    public void resetAttack()
+    {
+        attacking = false;
+        elapsedTime = 0;
+    }
     public void setBossInstance(GameObject boss)
     {
         bossInstance = boss;

@@ -9,9 +9,12 @@ public class PlaneShooting : MonoBehaviour
     public Transform m_FireTransform;
     //public Slider m_AimSlider;
     public AudioSource m_ShootingAudio;
+    public AudioSource PDAudio;
     public AudioClip m_ChargingClip;
     public AudioClip m_FireClip;
+    public AudioClip m_DoneFireClip;
     public float m_MinLaunchForce = 15f;
+    public GunSliderController gunSliderController;
     //public float m_MaxLaunchForce = 30f;
     //public float m_MaxChargeTime = 0.75f;
 
@@ -22,7 +25,8 @@ public class PlaneShooting : MonoBehaviour
     private string m_FireButton;
     private float m_CurrentLaunchForce;
     private float m_ChargeSpeed;
-    private bool m_Fired;
+    private bool firing;
+    private bool done = false;
 
     // Add fire cooldown variables
     private float m_FireCooldown = 1f;  // 2 shots per second
@@ -52,13 +56,20 @@ public class PlaneShooting : MonoBehaviour
         if(m_FireCooldownLeft > 0)
         {
             m_FireCooldownLeft -= Time.deltaTime;
+            //gunSliderController.indicateFire(false);
         }
 
         // Fire button is pressed and cooldown has finished
         if(Input.GetButton(m_FireButton) && m_FireCooldownLeft <= 0)
         {
             Fire();
-            m_FireCooldownLeft = m_FireCooldown/RPM;  // Start cooldown
+            m_FireCooldownLeft = m_FireCooldown/RPM;
+            gunSliderController.indicateFire(true);
+        }
+        if (!Input.GetButton(m_FireButton))
+        {
+            m_ShootingAudio.Stop();
+            gunSliderController.indicateFire(false);
         }
 
         currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
@@ -68,7 +79,7 @@ public class PlaneShooting : MonoBehaviour
     private void Fire()
     {
         // Instantiate and launch the shell.
-        m_Fired = true;
+        //m_Fired = true;
 
         Rigidbody shell = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
         shell.transform.parent = centralbulletPack.transform;
@@ -78,15 +89,23 @@ public class PlaneShooting : MonoBehaviour
 
         //shell.velocity = currentVelocity + m_CurrentLaunchForce * m_FireTransform.forward;
         shell.AddForce(m_CurrentLaunchForce * m_FireTransform.forward, ForceMode.VelocityChange);
-
-        //m_ShootingAudio.clip = m_FireClip;
-        //m_ShootingAudio.Play();
-
+        done = true;
+        if (!m_ShootingAudio.isPlaying)
+        {
+            m_ShootingAudio.clip = m_FireClip;
+            m_ShootingAudio.Play();
+        }
         m_CurrentLaunchForce = m_MinLaunchForce;
     }
 
     public void setBulletPack(GameObject pack)
     {
         centralbulletPack = pack;
+    }
+
+    private void OnDisable()
+    {
+        m_ShootingAudio.Stop();
+        gunSliderController.indicateFire(false);
     }
 }
