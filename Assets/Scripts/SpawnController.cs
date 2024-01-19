@@ -154,6 +154,7 @@ public class SpawnController : MonoBehaviour
         else
         {
             RG.setMovement(transform.forward * launchSpeed);
+            RG.scoreQueue = this.scoreQueue;
         }
     }
 

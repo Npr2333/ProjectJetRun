@@ -9,9 +9,11 @@ public class HUDController : MonoBehaviour
     public GameObject stage1Canvas;
     public GameObject MSLpanel;
     public GameObject gunPanel;
+    public GameObject RgPanel;
     public GameObject stage2Canvas;
     public PlaneShooting playerShooting;
     public TargetingManager playerMSL;
+    public PlaneRailGunLaunch PlaneRailGunLaunch;
     public PostProcessVolume volume;
     public float glitchIntensity = 1f;
     public float d_effectTime = 1f;
@@ -40,7 +42,17 @@ public class HUDController : MonoBehaviour
     public void enableGun()
     {
         StartCoroutine(e_Panel(gunPanel));
-        playerShooting.enabled = true;
+        //playerShooting.enabled = true;
+    }
+
+    public void disableRG()
+    {
+        StartCoroutine(d_Panel(RgPanel));
+    }
+    public void enableRG()
+    {
+        StartCoroutine(e_Panel(RgPanel));
+        PlaneRailGunLaunch.enabled = true;
     }
 
     public void disableStage1Canvas()
@@ -69,7 +81,7 @@ public class HUDController : MonoBehaviour
         MSLpanel.SetActive(true);
         gunPanel.SetActive(true);
         playerMSL.enabled = true;
-        playerShooting.enabled = true;
+        //playerShooting.enabled = true;
     }
     IEnumerator d_Panel(GameObject panel)
     {

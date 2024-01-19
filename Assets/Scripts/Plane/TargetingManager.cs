@@ -80,7 +80,7 @@ public class TargetingManager : MonoBehaviour
         }
 
         // Check for mouse click to fire a missile
-        if (Input.GetMouseButtonDown(1) && targetList.Any())
+        if (Input.GetMouseButtonDown(0) && targetList.Any())
         {
             manageFire();
             launchSpeaker.Play();

@@ -65,11 +65,14 @@ public class GameManager : MonoBehaviour
     public GameObject mainCanvas;
     public ScoreQueue scoreQueue;
     public ShowScore showScore;
+    //Canvas
+    public GameObject openingCanvas;
     //Controller Scripts
     public static GameManager Instance;
     private PlaneMovement playerMovement;
     private PlaneShooting playerShooting;
     private TargetingManager playerMSL;
+    private PlaneRailGunLaunch planeRailGunLaunch;
     public BossAttackController bossAttackController;
     public SplineFollowing splineFollower;
     public Stage1Director stage1Director;
@@ -141,12 +144,16 @@ public class GameManager : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             gameManager.camera.GetComponent<AudioListener>().enabled = false;
             gameManager.openingCamera.GetComponent<AudioListener>().enabled = true;
+            gameManager.openingCanvas.SetActive(true);
             gameManager.openingCamera.Priority = 10;
             gameManager.openingTimeline.Play();
         }
         public override void OnStateUpdate()
         {
-
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                gameManager.SetCurrentState(GameManager.GameState.Stage1);
+            }
         }
         public override void OnStateExit()
         {
@@ -154,6 +161,7 @@ public class GameManager : MonoBehaviour
             gameManager.camera.GetComponent<AudioListener>().enabled = true;
             gameManager.openingCamera.GetComponent<AudioListener>().enabled = false;
             gameManager.openingCamera.Priority = -100;
+            gameManager.openingCanvas.SetActive(false);
         }
     }
 
@@ -177,9 +185,10 @@ public class GameManager : MonoBehaviour
             gameManager.playerInstance = gameManager.player;
             gameManager.playerInstance.transform.localPosition = gameManager.SpawnPlayerTransform.transform.localPosition;
             gameManager.playerMovement = gameManager.playerInstance.GetComponent<PlaneMovement>();
+            gameManager.planeRailGunLaunch = gameManager.playerInstance.GetComponent<PlaneRailGunLaunch>();
             PlaneShooting playerShooting = gameManager.playerInstance.GetComponent<PlaneShooting>();
             PlaneHealth playerHealth = gameManager.playerInstance.GetComponent<PlaneHealth>();
-            gameManager.playerShooting = gameManager.playerInstance.GetComponent<PlaneShooting>();
+            //gameManager.playerShooting = gameManager.playerInstance.GetComponent<PlaneShooting>();
             gameManager.playerMSL = gameManager.playerInstance.GetComponent<TargetingManager>();
             playerHealth.cameraInstance = gameManager.camera1.GetComponent<CameraShake>();
             TargetingManager playerTargeting = gameManager.playerInstance.GetComponent<TargetingManager>();
@@ -296,8 +305,9 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("In Transition 1");
             gameManager.playerMovement.setInputStatus(false);
-            gameManager.playerShooting.enabled = false;
+            //gameManager.playerShooting.enabled = false;
             gameManager.playerMSL.enabled = false;
+            gameManager.planeRailGunLaunch.enabled = false;
             gameManager.playerMovement.MoveToPosition(gameManager.Stage2PlayerTransform);
             //gameManager.stage2Director.DirectTransition1();
             gameManager.stage2Timeline.Play();
@@ -518,99 +528,4 @@ public class GameManager : MonoBehaviour
     {
         gameStarted = true;
     }
-}   
-
-   
-
-//    public void GameStart()
-//    {
-//        // Code to start the game
-//        Debug.Log("GameStart");
-//        playerInstance = Instantiate(player, SpawnPlayerTransform.position, SpawnPlayerTransform.rotation);
-//        playerMovement = playerInstance.GetComponent<PlaneMovement>();
-//        SpawnController spawn = spawnController.GetComponent<SpawnController>();
-//        spawn.setTarget(playerInstance);
-//        CameraController cameraController = camera.GetComponent<CameraController>();
-//        cameraController.setTarget(playerInstance);
-//        currentState = GameState.Stage1;
-//    }
-
-//    public void Stage1()
-//    {
-        
-//    }
-
-//    public void Transition1()
-//    {
-//        // Code to handle transition
-//        Debug.Log("Transitioning");
-//        camera2.Priority = 3;
-//        playerMovement.setInputStatus(false);
-//        playerMovement.setTopDown();
-//        playerMovement.MoveToPosition(Stage2PlayerTransform.position);
-//        //currentState = GameState.Stage2;
-//    }
-
-//    public void Stage2()
-//    {
-//        // Code to handle stage 2
-//        playerMovement.setInputStatus(true);
-//        if (!spawnedBoss)
-//        {   
-//            Debug.Log("Boss Fight Start");
-//            bossInstance = Instantiate(boss, SpawnBossTransform.position, SpawnBossTransform.rotation);
-//            BossController bossController = bossInstance.GetComponent<BossController>();
-//            bossController.setTarget(playerInstance);
-//            bossController.setState(2);
-//            spawnedBoss = true;
-//        }
-//        else
-//        {
-//            //BossAttackController
-//        }
-//    }
-
-//    public void Transistion2()
-//    {
-//        // Code to handle transistion 2
-//        camera2.Priority = 1;
-//        playerMovement.setTopDown();
-        
-//    }
-
-//    public void Stage3()
-//    {
-
-//    }
-
-//    public void GameOver()
-//    {
-//        //Code to handle gameover
-//        Debug.Log("GameOver");
-//    }
-
-//    private void ToStage1()
-//    {
-//        currentState = GameState.Stage1;
-//    }
-
-//    private void ToTransition1()
-//    {
-//        currentState = GameState.Transition1;
-//    }
-
-//    private void ToStage2()
-//    {
-//        currentState = GameState.Stage2;
-//    }
-
-//    private void ToTransisiton2()
-//    {
-//        currentState = GameState.Transition2;
-//    }
-
-//    private void ToStage3()
-//    {
-//        currentState = GameState.Stage3;
-//    }
-//}
+}

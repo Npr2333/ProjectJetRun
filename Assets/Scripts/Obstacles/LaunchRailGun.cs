@@ -120,5 +120,14 @@ public class LaunchRailGun : MonoBehaviour
         StartCoroutine(launchBeam());
     }
 
+    public void setCastTime(float num)
+    {
+        castTime = num;
+    } 
+
+    public void setDuration(float num)
+    {
+        duration = num;
+    }
     
 }

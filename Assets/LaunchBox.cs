@@ -6,6 +6,7 @@ public class LaunchBox : MonoBehaviour
 {
     public bool isAutomated = true;
     public GameObject Box;
+    public GameObject Parent;
     public ParticleSystem cast;
     public float launchTime;
     public float duration;
@@ -45,7 +46,7 @@ public class LaunchBox : MonoBehaviour
         GameObject shot = Instantiate(Box, detectionTransform.position, detectionTransform.rotation);
         ParticleSystem caster = Instantiate(cast, detectionTransform.position, detectionTransform.rotation);
         caster.transform.SetParent(transform);
-        shot.transform.SetParent(transform);
+        shot.transform.SetParent(Parent.transform);
         BoxScale box = shot.GetComponent<BoxScale>();
         box.setScalesAndTime(targetScale, restScale, scaleTime);
         Collider checker = shot.transform.Find("Indestructable Obstacle Sample").GetComponent<Collider>();

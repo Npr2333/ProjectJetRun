@@ -6,19 +6,38 @@ using UnityEngine;
 public class DetectionCylinder : MonoBehaviour
 {
     public int damage = 100;
-
+    public bool isFriencly = false;
     public void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles")
+        if (!isFriencly)
         {
-            Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
-            Vector3 direction = collision.transform.position - transform.position;
-            direction.Normalize();
-
-            if (collision.gameObject.tag == "Plane")
+            if (collision.gameObject.tag != "FX" && collision.gameObject.tag != "Bullets" && collision.gameObject.tag != "DestructableObstacles")
             {
-                PlaneHealth health = collision.gameObject.GetComponent<PlaneHealth>();
-                health.ReduceHealth(damage, gameObject.transform.position);
+                Rigidbody hitRigidbody = collision.gameObject.GetComponent<Rigidbody>();
+                Vector3 direction = collision.transform.position - transform.position;
+                direction.Normalize();
+
+                if (collision.gameObject.tag == "Plane")
+                {
+                    PlaneHealth health = collision.gameObject.GetComponent<PlaneHealth>();
+                    health.ReduceHealth(damage, gameObject.transform.position);
+                }
+            }
+        }
+        else
+        {
+            if (collision.gameObject.tag == "DestructableObstacles")
+            {
+                if (collision.gameObject.tag == "DestructableObstacles")
+                {
+                    DestructableObstacles obstacle = collision.gameObject.GetComponent<DestructableObstacles>();
+                    obstacle.OnHit(damage); 
+                }
+                else if (collision.gameObject.tag == "IndestructableObstacles")
+                {
+                    IndustructableObstacles obstacle = collision.gameObject.GetComponent<IndustructableObstacles>();
+                    obstacle.OnHit(damage);
+                }
             }
         }
     }

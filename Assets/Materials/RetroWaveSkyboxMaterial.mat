@@ -101,7 +101,7 @@ Material:
     - _SunGradientOffset: {r: 0, g: -0.4, b: 0, a: 0}
     - _SunOffset: {r: 0.5, g: 0.2, b: 0, a: 0}
     - _SunSize: {r: 3, g: 3, b: 0, a: 0}
-    - _UpperColor: {r: 0.70741886, g: 0, b: 0.67761433, a: 0.9998186}
+    - _UpperColor: {r: 0.70738244, g: 0.0000009132367, b: 0.6777438, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &3552071724375201829
 MonoBehaviour:

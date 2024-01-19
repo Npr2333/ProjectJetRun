@@ -14,6 +14,7 @@ public class SonicBoomSoundTrigger : MonoBehaviour
     public HUDController hudController;
     public bool isGun;
     public bool isMSL;
+    public bool isRG;
     public bool isCanvas;
     public void OnTriggerEnter(Collider other)
     {
@@ -36,6 +37,11 @@ public class SonicBoomSoundTrigger : MonoBehaviour
                 if (isMSL)
                 {
                     hudController.disableMSL();
+                    return;
+                }
+                if (isRG)
+                {
+                    hudController.disableRG();
                     return;
                 }
                 if (isCanvas)

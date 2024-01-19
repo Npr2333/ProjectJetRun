@@ -2,15 +2,26 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class IndustructableObstacles : Obstacles
+public class IndustructableObstacles : MonoBehaviour
 {
+    public GameObject model;
+    public AudioSource speaker;
+    public AudioClip deathClip;
+    public ParticleSystem DestructionEffect;
+    public ParticleSystem deathBoom;
+    public Animator animator;
     [HideInInspector]public CharacterController controller;
     public PlaneHealth player;
     public int Damage = 100;
+    public int health = 100;
     public float destoryTime = 10f;
+    public GameObject deathCross;
     public bool noDestroy = false;
+    public ScoreQueue scoreQueue;
+    public int killScore = 300;
     private Vector3 ContactPoint;
     private Vector3 direction;
+    private bool isDead = false;
     private void Start()
     {
         //controller = GetComponent<CharacterController>();
@@ -18,8 +29,6 @@ public class IndustructableObstacles : Obstacles
         if (gameManager && GameManager.Instance.player != null)
             player = GameManager.Instance.player.GetComponent<PlaneHealth>();
 
-        isDestructible = false;
-        health = int.MaxValue;
         if (!noDestroy)
         {
             StartCoroutine(Suicide(destoryTime));
@@ -34,10 +43,16 @@ public class IndustructableObstacles : Obstacles
         }
     }
 
-    public override void OnHit(Collision collider)
+    public  void OnHit(int damageTaken)
     {
-        // Handle when player hits this thing
-        // Ends the game here
+        health -= damageTaken;
+        if (health <= 0 && !isDead)
+        {
+            isDead = true;
+            scoreQueue.AddToList(new ScoreObject("RG-7: +" + killScore, 3f, killScore));
+            Explode();
+            deathCross.SetActive(true);
+        }
     }
 
     public void setTarget(GameObject plane)
@@ -72,5 +87,26 @@ public class IndustructableObstacles : Obstacles
     public void setMovement(Vector3 heading)
     {
         direction = heading;
+    }
+
+    private void Explode()
+    {
+        //Handle the particle system of plane explosion
+        ParticleSystem explosion = Instantiate(DestructionEffect, transform.position, Quaternion.identity);
+        explosion.transform.parent = gameObject.transform;
+        explosion.Play();
+        //speaker.Stop();
+        //speaker.clip = deathClip;
+        //speaker.Play();
+        model.SetActive(false);
+        StartCoroutine(startDeath(explosion.duration));
+
+    }
+
+    private IEnumerator startDeath(float time)
+    {
+        //animator.SetBool("isDead", true);
+        yield return new WaitForSeconds(time);
+        Destroy(gameObject);
     }
 }

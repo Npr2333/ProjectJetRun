@@ -86,7 +86,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2245556989210979109, guid: a64798b88e07b8841832dbb286007416, type: 3}
       propertyPath: m_Parameters.widthMultiplier
-      value: 29.953625
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 2245556989210979109, guid: a64798b88e07b8841832dbb286007416, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
@@ -322,7 +322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4784303439866789286, guid: a64798b88e07b8841832dbb286007416, type: 3}
       propertyPath: m_Parameters.widthMultiplier
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 4784303439866789286, guid: a64798b88e07b8841832dbb286007416, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
